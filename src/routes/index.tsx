@@ -5,9 +5,15 @@ import {
   AnimatePresence,
   useScroll,
   useTransform,
+  type MotionValue,
 } from "framer-motion";
 
 import bgHero from "@/assets/bg-hero.jpg";
+import bgSec1 from "@/assets/bg-sec-1.jpg";
+import bgSec2 from "@/assets/bg-sec-2.jpg";
+import bgSec3 from "@/assets/bg-sec-3.jpg";
+import bgSec4 from "@/assets/bg-sec-4.jpg";
+import bgSec5 from "@/assets/bg-sec-5.jpg";
 import story1 from "@/assets/story-1.jpg";
 import story2 from "@/assets/story-2.jpg";
 import story3 from "@/assets/story-3.jpg";
@@ -19,6 +25,15 @@ import floralCorner from "@/assets/floral-corner.png";
 import floralHanging from "@/assets/floral-hanging.png";
 import floralWreath from "@/assets/floral-wreath.png";
 import waxSeal from "@/assets/wax-seal.png";
+import ornBouquet from "@/assets/orn-bouquet.png";
+import ornStrand from "@/assets/orn-strand.png";
+import ornRibbon from "@/assets/orn-ribbon.png";
+import ornTassel from "@/assets/orn-tassel.png";
+import ornFrame from "@/assets/orn-frame.png";
+import ornLace from "@/assets/orn-lace.png";
+import ornMonogram from "@/assets/orn-monogram.png";
+
+const SECTION_BGS = [bgHero, bgSec1, bgSec2, bgSec3, bgSec4, bgSec5];
 
 /* ---------- Envelope (Section 1) ---------- */
 function Envelope({ onOpen }: { onOpen: () => void }) {
@@ -48,10 +63,8 @@ function Envelope({ onOpen }: { onOpen: () => void }) {
         style={{ width: "min(80vw, 320px)", aspectRatio: "1.55 / 1" }}
         onClick={handle}
       >
-        {/* envelope body */}
         <div className="absolute inset-0 paper-burgundy rounded-sm gold-frame overflow-hidden">
           <div className="absolute inset-3 border border-[#c9a44c]/40 rounded-sm" />
-          {/* embossed monogram */}
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="font-script text-[#c9a44c]/30 text-7xl select-none">
               P&amp;B
@@ -59,7 +72,6 @@ function Envelope({ onOpen }: { onOpen: () => void }) {
           </div>
         </div>
 
-        {/* flap */}
         <motion.div
           initial={false}
           animate={{ rotateX: opening ? -180 : 0 }}
@@ -83,7 +95,6 @@ function Envelope({ onOpen }: { onOpen: () => void }) {
           />
         </motion.div>
 
-        {/* wax seal */}
         <motion.button
           aria-label="Open invitation"
           initial={false}
@@ -117,7 +128,45 @@ function Envelope({ onOpen }: { onOpen: () => void }) {
   );
 }
 
-/* ---------- Scratch Card (Section 2) ---------- */
+/* ---------- Petal burst (on scratch reveal) ---------- */
+function PetalBurst({ color = "#d98ca0" }: { color?: string }) {
+  const petals = Array.from({ length: 14 });
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-visible">
+      {petals.map((_, i) => {
+        const angle = (i / petals.length) * Math.PI * 2;
+        const dist = 90 + Math.random() * 60;
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist - 20;
+        return (
+          <motion.span
+            key={i}
+            initial={{ x: 0, y: 0, opacity: 0, scale: 0.3, rotate: 0 }}
+            animate={{
+              x: dx,
+              y: dy,
+              opacity: [0, 1, 0],
+              scale: [0.3, 1, 0.9],
+              rotate: 180 + Math.random() * 180,
+            }}
+            transition={{ duration: 1.6, ease: "easeOut", delay: i * 0.03 }}
+            className="absolute left-1/2 top-1/2 block"
+            style={{
+              width: 14,
+              height: 18,
+              background: color,
+              borderRadius: "60% 40% 60% 40% / 70% 30% 70% 30%",
+              boxShadow: "inset -2px -2px 4px rgba(0,0,0,0.15)",
+              transformOrigin: "center",
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+/* ---------- Royal Scratch Card (Section 2) ---------- */
 function ScratchCard({
   variant,
   prefix,
@@ -147,7 +196,6 @@ function ScratchCard({
     const ctx = canvas.getContext("2d")!;
     ctx.scale(dpr, dpr);
 
-    // foil gradient
     const grad = ctx.createLinearGradient(0, 0, width, height);
     if (variant === "burgundy") {
       grad.addColorStop(0, "#7a1f30");
@@ -161,23 +209,21 @@ function ScratchCard({
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, width, height);
 
-    // foil sparkles
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 80; i++) {
       ctx.fillStyle = `rgba(255,230,180,${Math.random() * 0.35})`;
       ctx.beginPath();
       ctx.arc(Math.random() * width, Math.random() * height, Math.random() * 1.6, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    // text overlay
     ctx.fillStyle = variant === "burgundy" ? "#f5d98a" : "#6b1a2a";
-    ctx.font = '600 42px "Cormorant Garamond", serif';
+    ctx.font = '600 38px "Cormorant Garamond", serif';
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(prefix, width / 2, height / 2);
 
-    ctx.font = '300 12px "Cormorant Garamond", serif';
-    ctx.fillText("scratch to reveal", width / 2, height / 2 + 36);
+    ctx.font = '300 11px "Cormorant Garamond", serif';
+    ctx.fillText("scratch to reveal", width / 2, height / 2 + 32);
   }, [prefix, variant]);
 
   const checkProgress = () => {
@@ -198,7 +244,6 @@ function ScratchCard({
     }
     if (cleared / total > 0.45) {
       setRevealed(true);
-      // animate erase
       canvas.style.transition = "opacity 700ms ease";
       canvas.style.opacity = "0";
       setTimeout(onRevealed, 400);
@@ -233,59 +278,134 @@ function ScratchCard({
     checkProgress();
   };
 
+  const isBurg = variant === "burgundy";
+  const accent = isBurg ? "#f5d98a" : "#6b1a2a";
+
   return (
-    <div
-      ref={wrapRef}
-      className={`relative rounded-sm gold-frame overflow-hidden ${
-        variant === "burgundy" ? "paper-burgundy" : "paper-pink"
-      }`}
-      style={{ width: "44vw", maxWidth: 170, aspectRatio: "0.72 / 1" }}
-    >
-      {/* card content underneath */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center px-2 text-center">
-        <div className="absolute inset-2 border border-[#c9a44c]/50 rounded-sm pointer-events-none" />
+    <div className="relative" style={{ width: "44vw", maxWidth: 180 }}>
+      {/* Royal ornate card */}
+      <div
+        ref={wrapRef}
+        className={`relative overflow-hidden ${isBurg ? "paper-burgundy" : "paper-pink"}`}
+        style={{
+          aspectRatio: "0.58 / 1",
+          borderTopLeftRadius: "50% 14%",
+          borderTopRightRadius: "50% 14%",
+          borderBottomLeftRadius: "12px",
+          borderBottomRightRadius: "12px",
+          boxShadow:
+            "0 20px 40px -10px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(201,164,76,0.55), inset 0 0 22px rgba(201,164,76,0.18)",
+        }}
+      >
+        {/* Decorative inner double border */}
         <div
-          className={`text-[10px] tracking-[0.4em] uppercase mb-2 ${
-            variant === "burgundy" ? "text-[#e8d5a8]" : "text-[#6b1a2a]"
-          }`}
-        >
-          {variant === "burgundy" ? "The Groom" : "The Bride"}
-        </div>
+          className="absolute inset-2 pointer-events-none"
+          style={{
+            border: `1px solid ${accent}99`,
+            borderTopLeftRadius: "50% 14%",
+            borderTopRightRadius: "50% 14%",
+            borderBottomLeftRadius: "8px",
+            borderBottomRightRadius: "8px",
+          }}
+        />
         <div
-          className={`font-script text-4xl ${
-            variant === "burgundy" ? "gold-text" : "text-[#6b1a2a]"
-          }`}
+          className="absolute inset-3.5 pointer-events-none"
+          style={{
+            border: `1px solid ${accent}55`,
+            borderTopLeftRadius: "50% 12%",
+            borderTopRightRadius: "50% 12%",
+            borderBottomLeftRadius: "6px",
+            borderBottomRightRadius: "6px",
+          }}
+        />
+
+        {/* Top crown flourish */}
+        <svg
+          viewBox="0 0 100 30"
+          className="absolute left-1/2 -translate-x-1/2 top-4 w-[70%] pointer-events-none"
+          fill="none"
+          stroke={accent}
+          strokeWidth="0.8"
         >
-          {name}
+          <path d="M10 22 Q 30 4 50 14 Q 70 4 90 22" />
+          <circle cx="50" cy="14" r="1.6" fill={accent} />
+          <path d="M30 22 q 5 -4 10 0" />
+          <path d="M60 22 q 5 -4 10 0" />
+        </svg>
+
+        {/* Bottom flourish */}
+        <svg
+          viewBox="0 0 100 20"
+          className="absolute left-1/2 -translate-x-1/2 bottom-4 w-[70%] pointer-events-none"
+          fill="none"
+          stroke={accent}
+          strokeWidth="0.8"
+        >
+          <path d="M10 6 Q 50 22 90 6" />
+          <circle cx="50" cy="14" r="1.4" fill={accent} />
+        </svg>
+
+        {/* Content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-2 text-center pt-6">
+          <div
+            className={`text-[9px] tracking-[0.45em] uppercase mb-1 ${
+              isBurg ? "text-[#e8d5a8]" : "text-[#6b1a2a]"
+            }`}
+          >
+            {isBurg ? "The Groom" : "The Bride"}
+          </div>
+          <div
+            className={`font-script leading-none ${
+              isBurg ? "gold-text" : "text-[#6b1a2a]"
+            }`}
+            style={{ fontSize: "2.4rem" }}
+          >
+            {name}
+          </div>
+          <div
+            className={`mt-2 text-[8px] tracking-[0.5em] uppercase ${
+              isBurg ? "text-[#e8d5a8]/70" : "text-[#6b1a2a]/70"
+            }`}
+          >
+            ⚜
+          </div>
+          {revealed && (
+            <>
+              <div className="absolute inset-0 shimmer pointer-events-none" />
+              <PetalBurst color={isBurg ? "#d98ca0" : "#6b1a2a"} />
+            </>
+          )}
         </div>
-        {revealed && (
-          <div className="absolute inset-0 shimmer pointer-events-none" />
-        )}
+
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 touch-none cursor-pointer"
+          onPointerDown={start}
+          onPointerMove={move}
+          onPointerUp={end}
+          onPointerLeave={end}
+        />
       </div>
 
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 touch-none cursor-pointer"
-        onPointerDown={start}
-        onPointerMove={move}
-        onPointerUp={end}
-        onPointerLeave={end}
+      {/* Hanging tassel under card */}
+      <img
+        src={ornTassel}
+        alt=""
+        className="absolute left-1/2 -translate-x-1/2 -bottom-10 w-8 opacity-90 pointer-events-none drop-shadow-[0_6px_8px_rgba(0,0,0,0.4)]"
       />
     </div>
   );
 }
 
-/* ---------- Section wrapper with fade-from-scroll ---------- */
+/* ---------- Section wrapper ---------- */
 function FadeSection({
   containerRef,
   index,
-  total,
   children,
   className = "",
 }: {
   containerRef: React.RefObject<HTMLDivElement | null>;
   index: number;
-  total: number;
   children: React.ReactNode;
   className?: string;
 }) {
@@ -314,8 +434,7 @@ function FadeSection({
   );
 }
 
-
-/* ---------- Story section variants ---------- */
+/* ---------- Story layouts (12 variants) ---------- */
 function StoryLayout({
   image,
   variant,
@@ -323,16 +442,15 @@ function StoryLayout({
   image: string;
   variant: number;
 }) {
-  // 7 distinct layouts
   const layouts: Record<number, React.ReactNode> = {
+    /* 1. Hanging strand garland */
     1: (
-      // Floral cascade — hanging garland top
       <div className="relative w-full h-full flex items-center justify-center px-6">
         <img
-          src={floralHanging}
+          src={ornStrand}
           alt=""
           loading="lazy"
-          className="absolute -top-4 left-1/2 -translate-x-1/2 w-[80%] max-w-[360px] opacity-95 drop-shadow-[0_10px_20px_rgba(0,0,0,0.4)] pointer-events-none"
+          className="absolute -top-6 left-1/2 -translate-x-1/2 w-[60%] max-w-[260px] opacity-95 pointer-events-none"
         />
         <div className="relative w-[78%] max-w-[340px] mt-20 gold-frame rounded-sm overflow-hidden">
           <img src={image} alt="" loading="lazy" className="w-full h-auto block" />
@@ -340,28 +458,22 @@ function StoryLayout({
         </div>
       </div>
     ),
+    /* 2. Ribbon drape */
     2: (
-      // Ribbon drapes — frame with side flowers
       <div className="relative w-full h-full flex items-center justify-center px-6">
         <div className="relative w-[80%] max-w-[340px] paper p-3 gold-frame rounded-sm">
           <img src={image} alt="" loading="lazy" className="w-full h-auto block rounded-sm" />
         </div>
         <img
-          src={floralCorner}
+          src={ornRibbon}
           alt=""
           loading="lazy"
-          className="absolute -bottom-8 -left-10 w-56 opacity-90 pointer-events-none -rotate-12"
-        />
-        <img
-          src={floralCorner}
-          alt=""
-          loading="lazy"
-          className="absolute -top-10 -right-12 w-48 opacity-90 pointer-events-none rotate-180"
+          className="absolute -top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[360px] pointer-events-none drop-shadow-[0_10px_14px_rgba(0,0,0,0.45)]"
         />
       </div>
     ),
+    /* 3. Luxury wreath */
     3: (
-      // Luxury wreath frame
       <div className="relative w-full h-full flex items-center justify-center">
         <img
           src={floralWreath}
@@ -371,19 +483,14 @@ function StoryLayout({
         />
         <div
           className="relative gold-frame rounded-full overflow-hidden"
-          style={{ width: "52%", maxWidth: 220, aspectRatio: "1" }}
+          style={{ width: "48%", maxWidth: 210, aspectRatio: "1" }}
         >
-          <img
-            src={image}
-            alt=""
-            loading="lazy"
-            className="w-full h-full object-cover"
-          />
+          <img src={image} alt="" loading="lazy" className="w-full h-full object-cover" />
         </div>
       </div>
     ),
+    /* 4. Floral corner composition */
     4: (
-      // Floral corner composition
       <div className="relative w-full h-full flex items-end justify-center pb-16 px-6">
         <img
           src={floralCorner}
@@ -402,17 +509,12 @@ function StoryLayout({
         />
       </div>
     ),
+    /* 5. Wax seal + bouquet */
     5: (
-      // Ornament + flower arrangement (wax seal accent)
       <div className="relative w-full h-full flex items-center justify-center px-6">
         <div className="relative w-[78%] max-w-[340px]">
           <div className="paper-burgundy p-2 gold-frame rounded-sm">
-            <img
-              src={image}
-              alt=""
-              loading="lazy"
-              className="w-full h-auto block rounded-sm"
-            />
+            <img src={image} alt="" loading="lazy" className="w-full h-auto block rounded-sm" />
           </div>
           <img
             src={waxSeal}
@@ -421,16 +523,16 @@ function StoryLayout({
             className="absolute -bottom-10 -right-6 w-24 drop-shadow-[0_10px_16px_rgba(0,0,0,0.5)] pointer-events-none"
           />
           <img
-            src={floralHanging}
+            src={ornBouquet}
             alt=""
             loading="lazy"
-            className="absolute -top-8 -left-12 w-44 opacity-95 pointer-events-none rotate-12"
+            className="absolute -top-10 -left-14 w-44 opacity-95 pointer-events-none rotate-[-12deg] drop-shadow-[0_8px_14px_rgba(0,0,0,0.4)]"
           />
         </div>
       </div>
     ),
+    /* 6. Polaroid tilt with corner flowers */
     6: (
-      // Floating ornament composition — polaroid tilt
       <div className="relative w-full h-full flex items-center justify-center">
         <div
           className="relative paper p-3 pb-12 gold-frame rounded-sm rotate-[-4deg]"
@@ -449,8 +551,8 @@ function StoryLayout({
         />
       </div>
     ),
+    /* 7. Arch frame */
     7: (
-      // Tall portrait with arch frame
       <div className="relative w-full h-full flex items-center justify-center px-8">
         <div
           className="relative gold-frame overflow-hidden"
@@ -462,12 +564,7 @@ function StoryLayout({
             borderTopRightRadius: "50% 30%",
           }}
         >
-          <img
-            src={image}
-            alt=""
-            loading="lazy"
-            className="w-full h-full object-cover"
-          />
+          <img src={image} alt="" loading="lazy" className="w-full h-full object-cover" />
           <div
             className="absolute inset-2 border border-[#c9a44c]/50 pointer-events-none"
             style={{
@@ -477,16 +574,123 @@ function StoryLayout({
           />
         </div>
         <img
-          src={floralHanging}
+          src={ornStrand}
           alt=""
           loading="lazy"
-          className="absolute -top-2 -right-6 w-40 opacity-90 pointer-events-none scale-x-[-1]"
+          className="absolute -top-2 -right-10 w-32 opacity-90 pointer-events-none scale-x-[-1]"
+        />
+      </div>
+    ),
+    /* 8. Ornate baroque frame */
+    8: (
+      <div className="relative w-full h-full flex items-center justify-center px-4">
+        <div className="relative" style={{ width: "85%", maxWidth: 340 }}>
+          <img
+            src={image}
+            alt=""
+            loading="lazy"
+            className="absolute inset-[14%] w-[72%] h-[72%] object-cover"
+          />
+          <img
+            src={ornFrame}
+            alt=""
+            loading="lazy"
+            className="relative w-full pointer-events-none drop-shadow-[0_14px_24px_rgba(0,0,0,0.5)]"
+          />
+        </div>
+      </div>
+    ),
+    /* 9. Lace border invitation */
+    9: (
+      <div className="relative w-full h-full flex items-center justify-center px-6">
+        <div className="relative paper p-6 gold-frame rounded-sm" style={{ width: "82%", maxWidth: 340 }}>
+          <img
+            src={ornLace}
+            alt=""
+            loading="lazy"
+            className="absolute inset-0 w-full h-full opacity-80 pointer-events-none"
+          />
+          <div className="relative">
+            <img src={image} alt="" loading="lazy" className="w-full h-auto block" />
+            <p className="mt-3 text-center font-script text-[#6b1a2a] text-2xl">
+              save the date
+            </p>
+          </div>
+        </div>
+      </div>
+    ),
+    /* 10. Monogram crest */
+    10: (
+      <div className="relative w-full h-full flex items-center justify-center px-6">
+        <div className="relative paper-burgundy p-4 gold-frame rounded-sm" style={{ width: "80%", maxWidth: 340 }}>
+          <img src={image} alt="" loading="lazy" className="w-full h-auto block rounded-sm opacity-90" />
+          <img
+            src={ornMonogram}
+            alt=""
+            loading="lazy"
+            className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-28 pointer-events-none drop-shadow-[0_10px_14px_rgba(0,0,0,0.5)]"
+          />
+        </div>
+      </div>
+    ),
+    /* 11. Bouquet duo with tassels */
+    11: (
+      <div className="relative w-full h-full flex items-center justify-center px-6">
+        <img
+          src={ornTassel}
+          alt=""
+          loading="lazy"
+          className="absolute top-0 left-3 w-12 opacity-90 pointer-events-none"
         />
         <img
-          src={floralCorner}
+          src={ornTassel}
           alt=""
           loading="lazy"
-          className="absolute -bottom-6 -left-8 w-44 opacity-90 pointer-events-none -rotate-45"
+          className="absolute top-0 right-3 w-12 opacity-90 pointer-events-none scale-x-[-1]"
+        />
+        <div className="relative w-[78%] max-w-[330px] gold-frame rounded-sm overflow-hidden">
+          <img src={image} alt="" loading="lazy" className="w-full h-auto block" />
+        </div>
+        <img
+          src={ornBouquet}
+          alt=""
+          loading="lazy"
+          className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-56 pointer-events-none drop-shadow-[0_10px_14px_rgba(0,0,0,0.45)]"
+        />
+      </div>
+    ),
+    /* 12. Vertical ribbon banner with arch */
+    12: (
+      <div className="relative w-full h-full flex items-center justify-center px-6">
+        <img
+          src={ornStrand}
+          alt=""
+          loading="lazy"
+          className="absolute -top-4 left-0 w-40 opacity-90 pointer-events-none"
+        />
+        <img
+          src={ornStrand}
+          alt=""
+          loading="lazy"
+          className="absolute -top-4 right-0 w-40 opacity-90 pointer-events-none scale-x-[-1]"
+        />
+        <div
+          className="relative gold-frame overflow-hidden"
+          style={{
+            width: "72%",
+            maxWidth: 300,
+            aspectRatio: "0.62 / 1",
+            borderTopLeftRadius: "50% 20%",
+            borderTopRightRadius: "50% 20%",
+          }}
+        >
+          <img src={image} alt="" loading="lazy" className="w-full h-full object-cover" />
+        </div>
+        <img
+          src={ornRibbon}
+          alt=""
+          loading="lazy"
+          className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-[85%] max-w-[320px] pointer-events-none"
         />
       </div>
     ),
@@ -532,6 +736,38 @@ function MusicButton() {
   );
 }
 
+/* ---------- Per-section background layer ---------- */
+function BgLayer({
+  src,
+  scrollYProgress,
+  index,
+  total,
+}: {
+  src: string;
+  scrollYProgress: MotionValue<number>;
+  index: number;
+  total: number;
+}) {
+  const step = 1 / total;
+  const center = (index + 0.5) * step;
+  const opacity = useTransform(
+    scrollYProgress,
+    [Math.max(0, center - step), center, Math.min(1, center + step)],
+    [0, 1, 0],
+  );
+  return (
+    <motion.div
+      style={{
+        opacity,
+        backgroundImage: `url(${src})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+      className="absolute inset-0"
+    />
+  );
+}
+
 /* ---------- Main experience ---------- */
 function Experience() {
   const [stage, setStage] = useState<"envelope" | "scratch" | "story">(
@@ -541,33 +777,50 @@ function Experience() {
   const [rightRevealed, setRightRevealed] = useState(false);
   const bothRevealed = leftRevealed && rightRevealed;
   const scrollRef = useRef<HTMLDivElement>(null);
-  
+  const { scrollYProgress } = useScroll({ container: scrollRef });
 
-  // auto-advance from scratch when both done
   useEffect(() => {
     if (bothRevealed && stage === "scratch") {
-      const t = setTimeout(() => setStage("story"), 1600);
+      const t = setTimeout(() => setStage("story"), 1800);
       return () => clearTimeout(t);
     }
   }, [bothRevealed, stage]);
 
-  const storyImages = [story1, story2, story3, story4, story5, story6, story7];
+  const storyImages = [
+    story1, story2, story3, story4, story5, story6,
+    story7, story1, story2, story3, story4, story5,
+  ];
+  // 12 story sections cycling through bg images
+  const totalStorySections = storyImages.length + 1; // + CTA
 
   return (
     <div className="relative w-full h-[100dvh] overflow-hidden bg-[#1a0608]">
-      {/* persistent background */}
-      <motion.div
-        className="absolute inset-0"
-        initial={{ opacity: 0, scale: 1.08 }}
-        animate={{ opacity: 1, scale: 1.02 }}
-        transition={{ opacity: { duration: 1.4 }, scale: { duration: 14, ease: "easeOut" } }}
-        style={{
-          backgroundImage: `url(${bgHero})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/60 pointer-events-none" />
+      {/* Hero background — only visible during envelope */}
+      <AnimatePresence>
+        {stage === "envelope" && (
+          <motion.div
+            key="hero-bg"
+            className="absolute inset-0"
+            initial={{ opacity: 0, scale: 1.08 }}
+            animate={{ opacity: 1, scale: 1.02 }}
+            exit={{ opacity: 0 }}
+            transition={{ opacity: { duration: 1.4 }, scale: { duration: 14, ease: "easeOut" } }}
+            style={{
+              backgroundImage: `url(${bgHero})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
+        )}
+      </AnimatePresence>
+      {stage === "envelope" && (
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/60 pointer-events-none" />
+      )}
+
+      {/* Scratch stage: subtle solid backdrop */}
+      {stage === "scratch" && (
+        <div className="absolute inset-0 paper-burgundy" />
+      )}
 
       <AnimatePresence mode="wait">
         {stage === "envelope" && (
@@ -592,6 +845,18 @@ function Experience() {
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 1 }}
           >
+            {/* Lace border ornament top */}
+            <img
+              src={ornLace}
+              alt=""
+              className="absolute top-4 left-0 right-0 w-full opacity-70 pointer-events-none"
+            />
+            <img
+              src={ornLace}
+              alt=""
+              className="absolute bottom-4 left-0 right-0 w-full opacity-70 pointer-events-none scale-y-[-1]"
+            />
+
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -638,87 +903,89 @@ function Experience() {
               initial={{ opacity: 0 }}
               animate={{ opacity: bothRevealed ? 0 : 1 }}
               transition={{ duration: 0.8 }}
-              className="mt-8 font-script text-[#f5d98a] text-xl"
+              className="mt-12 font-script text-[#f5d98a] text-xl"
             >
               scratch to reveal
             </motion.p>
-            <AnimatePresence>
-              {bothRevealed && (
-                <motion.p
-                  key="continue"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.8 }}
-                  className="mt-6 text-[10px] tracking-[0.5em] uppercase text-[#f5d98a]/80"
-                >
-                  continuing
-                </motion.p>
-              )}
-            </AnimatePresence>
           </motion.div>
         )}
 
         {stage === "story" && (
           <motion.div
             key="story"
-            ref={scrollRef}
-            className="absolute inset-0 overflow-y-auto no-scrollbar snap-y snap-mandatory"
+            className="absolute inset-0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.2 }}
-            style={{ scrollBehavior: "smooth" }}
           >
-            {storyImages.map((img, i) => (
-              <FadeSection
-                key={i}
-                containerRef={scrollRef}
-                index={i}
-                total={storyImages.length + 1}
-              >
-                <StoryLayout image={img} variant={(i % 7) + 1} />
-              </FadeSection>
-            ))}
-
-            {/* Final CTA section */}
-            <FadeSection
-              containerRef={scrollRef}
-              index={storyImages.length}
-              total={storyImages.length + 1}
-            >
-              <div className="relative flex flex-col items-center justify-center px-8 text-center w-full">
-                <img
-                  src={floralWreath}
-                  alt=""
-                  loading="lazy"
-                  className="absolute w-[90%] max-w-[420px] opacity-50 pointer-events-none"
+            {/* Per-section backgrounds, fading smoothly as we scroll */}
+            <div className="absolute inset-0 bg-[#1a0608]">
+              {storyImages.map((_, i) => (
+                <BgLayer
+                  key={i}
+                  src={SECTION_BGS[i % SECTION_BGS.length]}
+                  scrollYProgress={scrollYProgress}
+                  index={i}
+                  total={totalStorySections}
                 />
-                <motion.a
-                  href="https://lovable.dev"
-                  target="_blank"
-                  rel="noreferrer"
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  whileInView={{ scale: 1, opacity: 1 }}
-                  whileTap={{ scale: 0.97 }}
-                  transition={{ duration: 0.9 }}
-                  className="relative paper-burgundy gold-frame rounded-sm px-10 py-8 inline-flex flex-col items-center"
-                >
-                  <div className="absolute inset-2 border border-[#c9a44c]/50 pointer-events-none rounded-sm" />
-                  <span className="text-[10px] tracking-[0.5em] uppercase text-[#e8d5a8] mb-3">
-                    with love
-                  </span>
-                  <span className="font-script gold-text text-4xl leading-none">
-                    Continue Your
-                  </span>
-                  <span className="font-script gold-text text-4xl leading-none mt-1">
-                    Journey
-                  </span>
-                  <span className="mt-4 text-[10px] tracking-[0.4em] uppercase text-[#f5d98a]/80">
-                    tap to open
-                  </span>
-                </motion.a>
-              </div>
-            </FadeSection>
+              ))}
+              {/* CTA section bg */}
+              <BgLayer
+                src={SECTION_BGS[0]}
+                scrollYProgress={scrollYProgress}
+                index={storyImages.length}
+                total={totalStorySections}
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 pointer-events-none" />
+            </div>
+
+            <div
+              ref={scrollRef}
+              className="absolute inset-0 overflow-y-auto no-scrollbar snap-y snap-mandatory"
+              style={{ scrollBehavior: "smooth" }}
+            >
+              {storyImages.map((img, i) => (
+                <FadeSection key={i} containerRef={scrollRef} index={i}>
+                  <StoryLayout image={img} variant={(i % 12) + 1} />
+                </FadeSection>
+              ))}
+
+              {/* Final CTA */}
+              <FadeSection containerRef={scrollRef} index={storyImages.length}>
+                <div className="relative flex flex-col items-center justify-center px-8 text-center w-full">
+                  <img
+                    src={floralWreath}
+                    alt=""
+                    loading="lazy"
+                    className="absolute w-[90%] max-w-[420px] opacity-55 pointer-events-none"
+                  />
+                  <motion.a
+                    href="https://lovable.dev"
+                    target="_blank"
+                    rel="noreferrer"
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ duration: 0.9 }}
+                    className="relative paper-burgundy gold-frame rounded-sm px-8 py-7 inline-flex flex-col items-center"
+                  >
+                    <div className="absolute inset-2 border border-[#c9a44c]/50 pointer-events-none rounded-sm" />
+                    <span className="text-[10px] tracking-[0.5em] uppercase text-[#e8d5a8] mb-3">
+                      with love
+                    </span>
+                    <span className="font-script gold-text text-3xl leading-tight">
+                      for more details
+                    </span>
+                    <span className="font-script gold-text text-3xl leading-tight">
+                      please click here
+                    </span>
+                    <span className="mt-4 text-[10px] tracking-[0.4em] uppercase text-[#f5d98a]/80">
+                      open wedding website
+                    </span>
+                  </motion.a>
+                </div>
+              </FadeSection>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
