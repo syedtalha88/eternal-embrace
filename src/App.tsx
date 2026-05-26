@@ -897,6 +897,105 @@ function BgLayer({
 }
 
 /* ---------- Main experience ---------- */
+const STORY_IMAGES = [
+  story1, story2, story3, story4, story5, story6,
+  story7, story1, story2, story3, story4, story5,
+];
+
+function StoryStage() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const { scrollYProgress } = useScroll({
+    container: mounted ? scrollRef : undefined,
+  });
+  const totalStorySections = STORY_IMAGES.length + 1;
+
+  return (
+    <motion.div
+      key="story"
+      className="absolute inset-0"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1.2 }}
+    >
+      <div className="absolute inset-0 bg-[#1a0608]">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${SECTION_BGS[1]})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        {STORY_IMAGES.map((_, i) => (
+          <BgLayer
+            key={i}
+            src={SECTION_BGS[(i + 1) % SECTION_BGS.length]}
+            scrollYProgress={scrollYProgress}
+            index={i}
+            total={totalStorySections}
+          />
+        ))}
+        <BgLayer
+          src={SECTION_BGS[0]}
+          scrollYProgress={scrollYProgress}
+          index={STORY_IMAGES.length}
+          total={totalStorySections}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 pointer-events-none" />
+      </div>
+
+      <div
+        ref={scrollRef}
+        className="absolute inset-0 overflow-y-auto no-scrollbar snap-y snap-mandatory"
+        style={{ scrollBehavior: "smooth" }}
+      >
+        {STORY_IMAGES.map((img, i) => (
+          <FadeSection key={i} containerRef={scrollRef} index={i}>
+            <StoryLayout image={img} variant={(i % 12) + 1} />
+          </FadeSection>
+        ))}
+
+        <FadeSection containerRef={scrollRef} index={STORY_IMAGES.length}>
+          <div className="relative flex flex-col items-center justify-center px-8 text-center w-full">
+            <img
+              src={floralWreath}
+              alt=""
+              loading="lazy"
+              className="absolute w-[90%] max-w-[420px] opacity-55 pointer-events-none"
+            />
+            <motion.a
+              href="https://lovable.dev"
+              target="_blank"
+              rel="noreferrer"
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.9 }}
+              className="relative paper-burgundy gold-frame rounded-sm px-8 py-7 inline-flex flex-col items-center"
+            >
+              <div className="absolute inset-2 border border-[#c9a44c]/50 pointer-events-none rounded-sm" />
+              <span className="text-[10px] tracking-[0.5em] uppercase text-[#e8d5a8] mb-3">
+                with love
+              </span>
+              <span className="font-script gold-text text-3xl leading-tight">
+                for more details
+              </span>
+              <span className="font-script gold-text text-3xl leading-tight">
+                please click here
+              </span>
+              <span className="mt-4 text-[10px] tracking-[0.4em] uppercase text-[#f5d98a]/80">
+                open wedding website
+              </span>
+            </motion.a>
+          </div>
+        </FadeSection>
+      </div>
+    </motion.div>
+  );
+}
+
 function Experience() {
   const [stage, setStage] = useState<"envelope" | "scratch" | "story">(
     "envelope",
@@ -904,8 +1003,6 @@ function Experience() {
   const [leftRevealed, setLeftRevealed] = useState(false);
   const [rightRevealed, setRightRevealed] = useState(false);
   const bothRevealed = leftRevealed && rightRevealed;
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ container: scrollRef });
 
   useEffect(() => {
     if (bothRevealed && stage === "scratch") {
@@ -914,11 +1011,7 @@ function Experience() {
     }
   }, [bothRevealed, stage]);
 
-  const storyImages = [
-    story1, story2, story3, story4, story5, story6,
-    story7, story1, story2, story3, story4, story5,
-  ];
-  const totalStorySections = storyImages.length + 1;
+
 
   return (
     <div className="relative w-full h-[100dvh] overflow-hidden bg-[#1a0608]">
