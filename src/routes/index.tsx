@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
 import {
   motion,
   AnimatePresence,
   useScroll,
   useTransform,
-  type MotionValue,
 } from "framer-motion";
 
 import bgHero from "@/assets/bg-hero.jpg";
