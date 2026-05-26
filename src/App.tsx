@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
 import {
   motion,
   AnimatePresence,
@@ -128,7 +127,7 @@ function Envelope({ onOpen }: { onOpen: () => void }) {
   );
 }
 
-/* ---------- Petal burst (on scratch reveal) ---------- */
+/* ---------- Petal burst ---------- */
 function PetalBurst({ color = "#d98ca0" }: { color?: string }) {
   const petals = Array.from({ length: 14 });
   return (
@@ -166,7 +165,7 @@ function PetalBurst({ color = "#d98ca0" }: { color?: string }) {
   );
 }
 
-/* ---------- Royal Scratch Card (Section 2) ---------- */
+/* ---------- Royal Scratch Card ---------- */
 function ScratchCard({
   variant,
   prefix,
@@ -283,7 +282,6 @@ function ScratchCard({
 
   return (
     <div className="relative" style={{ width: "44vw", maxWidth: 180 }}>
-      {/* Royal ornate card */}
       <div
         ref={wrapRef}
         className={`relative overflow-hidden ${isBurg ? "paper-burgundy" : "paper-pink"}`}
@@ -297,7 +295,6 @@ function ScratchCard({
             "0 20px 40px -10px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(201,164,76,0.55), inset 0 0 22px rgba(201,164,76,0.18)",
         }}
       >
-        {/* Decorative inner double border */}
         <div
           className="absolute inset-2 pointer-events-none"
           style={{
@@ -319,7 +316,6 @@ function ScratchCard({
           }}
         />
 
-        {/* Top crown flourish */}
         <svg
           viewBox="0 0 100 30"
           className="absolute left-1/2 -translate-x-1/2 top-4 w-[70%] pointer-events-none"
@@ -333,7 +329,6 @@ function ScratchCard({
           <path d="M60 22 q 5 -4 10 0" />
         </svg>
 
-        {/* Bottom flourish */}
         <svg
           viewBox="0 0 100 20"
           className="absolute left-1/2 -translate-x-1/2 bottom-4 w-[70%] pointer-events-none"
@@ -345,7 +340,6 @@ function ScratchCard({
           <circle cx="50" cy="14" r="1.4" fill={accent} />
         </svg>
 
-        {/* Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center px-2 text-center pt-6">
           <div
             className={`text-[9px] tracking-[0.45em] uppercase mb-1 ${
@@ -387,7 +381,6 @@ function ScratchCard({
         />
       </div>
 
-      {/* Hanging tassel under card */}
       <img
         src={ornTassel}
         alt=""
@@ -434,7 +427,7 @@ function FadeSection({
   );
 }
 
-/* ---------- Story layouts (12 variants) ---------- */
+/* ---------- Story layouts (12 variants) — each has 2-3 decorations ---------- */
 function StoryLayout({
   image,
   variant,
@@ -443,22 +436,40 @@ function StoryLayout({
   variant: number;
 }) {
   const layouts: Record<number, React.ReactNode> = {
-    /* 1. Hanging strand garland */
+    /* 1. Hanging strand garland + tassels + bouquet */
     1: (
       <div className="relative w-full h-full flex items-center justify-center px-6">
         <img
           src={ornStrand}
           alt=""
           loading="lazy"
-          className="absolute -top-6 left-1/2 -translate-x-1/2 w-[60%] max-w-[260px] opacity-95 pointer-events-none"
+          className="absolute -top-6 left-1/2 -translate-x-1/2 w-[70%] max-w-[280px] opacity-95 pointer-events-none"
         />
-        <div className="relative w-[78%] max-w-[340px] mt-20 gold-frame rounded-sm overflow-hidden">
+        <img
+          src={ornTassel}
+          alt=""
+          loading="lazy"
+          className="absolute top-2 left-2 w-10 opacity-90 pointer-events-none"
+        />
+        <img
+          src={ornTassel}
+          alt=""
+          loading="lazy"
+          className="absolute top-2 right-2 w-10 opacity-90 pointer-events-none scale-x-[-1]"
+        />
+        <div className="relative w-[78%] max-w-[340px] mt-16 gold-frame rounded-sm overflow-hidden">
           <img src={image} alt="" loading="lazy" className="w-full h-auto block" />
           <div className="absolute inset-1 border border-[#c9a44c]/50 pointer-events-none" />
         </div>
+        <img
+          src={ornBouquet}
+          alt=""
+          loading="lazy"
+          className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-44 opacity-95 pointer-events-none drop-shadow-[0_10px_14px_rgba(0,0,0,0.45)]"
+        />
       </div>
     ),
-    /* 2. Ribbon drape */
+    /* 2. Ribbon drape + wax seal + corner */
     2: (
       <div className="relative w-full h-full flex items-center justify-center px-6">
         <div className="relative w-[80%] max-w-[340px] paper p-3 gold-frame rounded-sm">
@@ -470,11 +481,35 @@ function StoryLayout({
           loading="lazy"
           className="absolute -top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[360px] pointer-events-none drop-shadow-[0_10px_14px_rgba(0,0,0,0.45)]"
         />
+        <img
+          src={waxSeal}
+          alt=""
+          loading="lazy"
+          className="absolute bottom-12 right-4 w-16 pointer-events-none drop-shadow-[0_8px_12px_rgba(0,0,0,0.5)]"
+        />
+        <img
+          src={floralCorner}
+          alt=""
+          loading="lazy"
+          className="absolute -bottom-4 -left-4 w-32 opacity-90 pointer-events-none"
+        />
       </div>
     ),
-    /* 3. Luxury wreath */
+    /* 3. Luxury wreath + strands */
     3: (
       <div className="relative w-full h-full flex items-center justify-center">
+        <img
+          src={ornStrand}
+          alt=""
+          loading="lazy"
+          className="absolute top-0 left-0 w-32 opacity-85 pointer-events-none"
+        />
+        <img
+          src={ornStrand}
+          alt=""
+          loading="lazy"
+          className="absolute top-0 right-0 w-32 opacity-85 pointer-events-none scale-x-[-1]"
+        />
         <img
           src={floralWreath}
           alt=""
@@ -487,9 +522,15 @@ function StoryLayout({
         >
           <img src={image} alt="" loading="lazy" className="w-full h-full object-cover" />
         </div>
+        <img
+          src={ornMonogram}
+          alt=""
+          loading="lazy"
+          className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-20 pointer-events-none drop-shadow-[0_10px_14px_rgba(0,0,0,0.45)]"
+        />
       </div>
     ),
-    /* 4. Floral corner composition */
+    /* 4. Floral corners + ribbon */
     4: (
       <div className="relative w-full h-full flex items-end justify-center pb-16 px-6">
         <img
@@ -497,6 +538,12 @@ function StoryLayout({
           alt=""
           loading="lazy"
           className="absolute top-0 left-0 w-56 opacity-95 pointer-events-none -rotate-90"
+        />
+        <img
+          src={ornRibbon}
+          alt=""
+          loading="lazy"
+          className="absolute top-6 left-1/2 -translate-x-1/2 w-[70%] max-w-[280px] opacity-90 pointer-events-none"
         />
         <div className="relative w-[78%] max-w-[340px] gold-frame rounded-sm overflow-hidden">
           <img src={image} alt="" loading="lazy" className="w-full h-auto block" />
@@ -509,7 +556,7 @@ function StoryLayout({
         />
       </div>
     ),
-    /* 5. Wax seal + bouquet */
+    /* 5. Wax seal + bouquet + tassel */
     5: (
       <div className="relative w-full h-full flex items-center justify-center px-6">
         <div className="relative w-[78%] max-w-[340px]">
@@ -528,10 +575,16 @@ function StoryLayout({
             loading="lazy"
             className="absolute -top-10 -left-14 w-44 opacity-95 pointer-events-none rotate-[-12deg] drop-shadow-[0_8px_14px_rgba(0,0,0,0.4)]"
           />
+          <img
+            src={ornTassel}
+            alt=""
+            loading="lazy"
+            className="absolute -top-8 right-2 w-10 opacity-90 pointer-events-none"
+          />
         </div>
       </div>
     ),
-    /* 6. Polaroid tilt with corner flowers */
+    /* 6. Polaroid tilt + floral corners + tassel */
     6: (
       <div className="relative w-full h-full flex items-center justify-center">
         <div
@@ -549,11 +602,35 @@ function StoryLayout({
           loading="lazy"
           className="absolute -top-6 right-2 w-40 opacity-90 pointer-events-none"
         />
+        <img
+          src={floralHanging}
+          alt=""
+          loading="lazy"
+          className="absolute -bottom-4 left-0 w-36 opacity-85 pointer-events-none"
+        />
+        <img
+          src={ornTassel}
+          alt=""
+          loading="lazy"
+          className="absolute top-4 left-4 w-10 opacity-90 pointer-events-none"
+        />
       </div>
     ),
-    /* 7. Arch frame */
+    /* 7. Arch frame + strands + bouquet */
     7: (
       <div className="relative w-full h-full flex items-center justify-center px-8">
+        <img
+          src={ornStrand}
+          alt=""
+          loading="lazy"
+          className="absolute -top-2 left-0 w-32 opacity-90 pointer-events-none"
+        />
+        <img
+          src={ornStrand}
+          alt=""
+          loading="lazy"
+          className="absolute -top-2 right-0 w-32 opacity-90 pointer-events-none scale-x-[-1]"
+        />
         <div
           className="relative gold-frame overflow-hidden"
           style={{
@@ -574,16 +651,22 @@ function StoryLayout({
           />
         </div>
         <img
-          src={ornStrand}
+          src={ornBouquet}
           alt=""
           loading="lazy"
-          className="absolute -top-2 -right-10 w-32 opacity-90 pointer-events-none scale-x-[-1]"
+          className="absolute -bottom-6 right-0 w-40 opacity-95 pointer-events-none drop-shadow-[0_10px_14px_rgba(0,0,0,0.45)]"
         />
       </div>
     ),
-    /* 8. Ornate baroque frame */
+    /* 8. Ornate baroque frame + wax + corners */
     8: (
       <div className="relative w-full h-full flex items-center justify-center px-4">
+        <img
+          src={floralCorner}
+          alt=""
+          loading="lazy"
+          className="absolute top-0 left-0 w-32 opacity-85 pointer-events-none"
+        />
         <div className="relative" style={{ width: "85%", maxWidth: 340 }}>
           <img
             src={image}
@@ -597,12 +680,24 @@ function StoryLayout({
             loading="lazy"
             className="relative w-full pointer-events-none drop-shadow-[0_14px_24px_rgba(0,0,0,0.5)]"
           />
+          <img
+            src={waxSeal}
+            alt=""
+            loading="lazy"
+            className="absolute -bottom-6 -right-4 w-20 pointer-events-none drop-shadow-[0_10px_14px_rgba(0,0,0,0.5)]"
+          />
         </div>
       </div>
     ),
-    /* 9. Lace border invitation */
+    /* 9. Lace border + ribbon + tassel */
     9: (
       <div className="relative w-full h-full flex items-center justify-center px-6">
+        <img
+          src={ornRibbon}
+          alt=""
+          loading="lazy"
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[85%] max-w-[320px] opacity-90 pointer-events-none"
+        />
         <div className="relative paper p-6 gold-frame rounded-sm" style={{ width: "82%", maxWidth: 340 }}>
           <img
             src={ornLace}
@@ -617,11 +712,29 @@ function StoryLayout({
             </p>
           </div>
         </div>
+        <img
+          src={ornTassel}
+          alt=""
+          loading="lazy"
+          className="absolute -bottom-2 left-6 w-10 opacity-90 pointer-events-none"
+        />
+        <img
+          src={ornTassel}
+          alt=""
+          loading="lazy"
+          className="absolute -bottom-2 right-6 w-10 opacity-90 pointer-events-none scale-x-[-1]"
+        />
       </div>
     ),
-    /* 10. Monogram crest */
+    /* 10. Monogram crest + bouquet + strand */
     10: (
       <div className="relative w-full h-full flex items-center justify-center px-6">
+        <img
+          src={ornStrand}
+          alt=""
+          loading="lazy"
+          className="absolute top-0 left-0 w-32 opacity-85 pointer-events-none"
+        />
         <div className="relative paper-burgundy p-4 gold-frame rounded-sm" style={{ width: "80%", maxWidth: 340 }}>
           <img src={image} alt="" loading="lazy" className="w-full h-auto block rounded-sm opacity-90" />
           <img
@@ -631,9 +744,15 @@ function StoryLayout({
             className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-28 pointer-events-none drop-shadow-[0_10px_14px_rgba(0,0,0,0.5)]"
           />
         </div>
+        <img
+          src={ornBouquet}
+          alt=""
+          loading="lazy"
+          className="absolute top-2 right-0 w-36 opacity-90 pointer-events-none rotate-12"
+        />
       </div>
     ),
-    /* 11. Bouquet duo with tassels */
+    /* 11. Bouquet duo + tassels */
     11: (
       <div className="relative w-full h-full flex items-center justify-center px-6">
         <img
@@ -659,7 +778,7 @@ function StoryLayout({
         />
       </div>
     ),
-    /* 12. Vertical ribbon banner with arch */
+    /* 12. Vertical ribbon banner + strands + arch */
     12: (
       <div className="relative w-full h-full flex items-center justify-center px-6">
         <img
@@ -736,7 +855,7 @@ function MusicButton() {
   );
 }
 
-/* ---------- Per-section background layer ---------- */
+/* ---------- Per-section background layer (edge-aware) ---------- */
 function BgLayer({
   src,
   scrollYProgress,
@@ -750,10 +869,19 @@ function BgLayer({
 }) {
   const step = 1 / total;
   const center = (index + 0.5) * step;
+  const before = (index - 0.5) * step;
+  const after = (index + 1.5) * step;
+  const isFirst = index === 0;
+  const isLast = index === total - 1;
   const opacity = useTransform(
     scrollYProgress,
-    [Math.max(0, center - step), center, Math.min(1, center + step)],
-    [0, 1, 0],
+    [
+      Math.max(0, before),
+      Math.max(0, center - step * 0.001),
+      Math.min(1, center + step * 0.001),
+      Math.min(1, after),
+    ],
+    [isFirst ? 1 : 0, 1, 1, isLast ? 1 : 0],
   );
   return (
     <motion.div
@@ -769,6 +897,105 @@ function BgLayer({
 }
 
 /* ---------- Main experience ---------- */
+const STORY_IMAGES = [
+  story1, story2, story3, story4, story5, story6,
+  story7, story1, story2, story3, story4, story5,
+];
+
+function StoryStage() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const { scrollYProgress } = useScroll({
+    container: mounted ? scrollRef : undefined,
+  });
+  const totalStorySections = STORY_IMAGES.length + 1;
+
+  return (
+    <motion.div
+      key="story"
+      className="absolute inset-0"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1.2 }}
+    >
+      <div className="absolute inset-0 bg-[#1a0608]">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${SECTION_BGS[1]})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        {STORY_IMAGES.map((_, i) => (
+          <BgLayer
+            key={i}
+            src={SECTION_BGS[(i + 1) % SECTION_BGS.length]}
+            scrollYProgress={scrollYProgress}
+            index={i}
+            total={totalStorySections}
+          />
+        ))}
+        <BgLayer
+          src={SECTION_BGS[0]}
+          scrollYProgress={scrollYProgress}
+          index={STORY_IMAGES.length}
+          total={totalStorySections}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 pointer-events-none" />
+      </div>
+
+      <div
+        ref={scrollRef}
+        className="absolute inset-0 overflow-y-auto no-scrollbar snap-y snap-mandatory"
+        style={{ scrollBehavior: "smooth" }}
+      >
+        {STORY_IMAGES.map((img, i) => (
+          <FadeSection key={i} containerRef={scrollRef} index={i}>
+            <StoryLayout image={img} variant={(i % 12) + 1} />
+          </FadeSection>
+        ))}
+
+        <FadeSection containerRef={scrollRef} index={STORY_IMAGES.length}>
+          <div className="relative flex flex-col items-center justify-center px-8 text-center w-full">
+            <img
+              src={floralWreath}
+              alt=""
+              loading="lazy"
+              className="absolute w-[90%] max-w-[420px] opacity-55 pointer-events-none"
+            />
+            <motion.a
+              href="https://lovable.dev"
+              target="_blank"
+              rel="noreferrer"
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.9 }}
+              className="relative paper-burgundy gold-frame rounded-sm px-8 py-7 inline-flex flex-col items-center"
+            >
+              <div className="absolute inset-2 border border-[#c9a44c]/50 pointer-events-none rounded-sm" />
+              <span className="text-[10px] tracking-[0.5em] uppercase text-[#e8d5a8] mb-3">
+                with love
+              </span>
+              <span className="font-script gold-text text-3xl leading-tight">
+                for more details
+              </span>
+              <span className="font-script gold-text text-3xl leading-tight">
+                please click here
+              </span>
+              <span className="mt-4 text-[10px] tracking-[0.4em] uppercase text-[#f5d98a]/80">
+                open wedding website
+              </span>
+            </motion.a>
+          </div>
+        </FadeSection>
+      </div>
+    </motion.div>
+  );
+}
+
 function Experience() {
   const [stage, setStage] = useState<"envelope" | "scratch" | "story">(
     "envelope",
@@ -776,8 +1003,6 @@ function Experience() {
   const [leftRevealed, setLeftRevealed] = useState(false);
   const [rightRevealed, setRightRevealed] = useState(false);
   const bothRevealed = leftRevealed && rightRevealed;
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ container: scrollRef });
 
   useEffect(() => {
     if (bothRevealed && stage === "scratch") {
@@ -786,16 +1011,10 @@ function Experience() {
     }
   }, [bothRevealed, stage]);
 
-  const storyImages = [
-    story1, story2, story3, story4, story5, story6,
-    story7, story1, story2, story3, story4, story5,
-  ];
-  // 12 story sections cycling through bg images
-  const totalStorySections = storyImages.length + 1; // + CTA
+
 
   return (
     <div className="relative w-full h-[100dvh] overflow-hidden bg-[#1a0608]">
-      {/* Hero background — only visible during envelope */}
       <AnimatePresence>
         {stage === "envelope" && (
           <motion.div
@@ -817,7 +1036,6 @@ function Experience() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/60 pointer-events-none" />
       )}
 
-      {/* Scratch stage: subtle solid backdrop */}
       {stage === "scratch" && (
         <div className="absolute inset-0 paper-burgundy" />
       )}
@@ -845,7 +1063,6 @@ function Experience() {
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 1 }}
           >
-            {/* Lace border ornament top */}
             <img
               src={ornLace}
               alt=""
@@ -910,84 +1127,8 @@ function Experience() {
           </motion.div>
         )}
 
-        {stage === "story" && (
-          <motion.div
-            key="story"
-            className="absolute inset-0"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1.2 }}
-          >
-            {/* Per-section backgrounds, fading smoothly as we scroll */}
-            <div className="absolute inset-0 bg-[#1a0608]">
-              {storyImages.map((_, i) => (
-                <BgLayer
-                  key={i}
-                  src={SECTION_BGS[i % SECTION_BGS.length]}
-                  scrollYProgress={scrollYProgress}
-                  index={i}
-                  total={totalStorySections}
-                />
-              ))}
-              {/* CTA section bg */}
-              <BgLayer
-                src={SECTION_BGS[0]}
-                scrollYProgress={scrollYProgress}
-                index={storyImages.length}
-                total={totalStorySections}
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 pointer-events-none" />
-            </div>
+        {stage === "story" && <StoryStage key="story" />}
 
-            <div
-              ref={scrollRef}
-              className="absolute inset-0 overflow-y-auto no-scrollbar snap-y snap-mandatory"
-              style={{ scrollBehavior: "smooth" }}
-            >
-              {storyImages.map((img, i) => (
-                <FadeSection key={i} containerRef={scrollRef} index={i}>
-                  <StoryLayout image={img} variant={(i % 12) + 1} />
-                </FadeSection>
-              ))}
-
-              {/* Final CTA */}
-              <FadeSection containerRef={scrollRef} index={storyImages.length}>
-                <div className="relative flex flex-col items-center justify-center px-8 text-center w-full">
-                  <img
-                    src={floralWreath}
-                    alt=""
-                    loading="lazy"
-                    className="absolute w-[90%] max-w-[420px] opacity-55 pointer-events-none"
-                  />
-                  <motion.a
-                    href="https://lovable.dev"
-                    target="_blank"
-                    rel="noreferrer"
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    whileInView={{ scale: 1, opacity: 1 }}
-                    whileTap={{ scale: 0.97 }}
-                    transition={{ duration: 0.9 }}
-                    className="relative paper-burgundy gold-frame rounded-sm px-8 py-7 inline-flex flex-col items-center"
-                  >
-                    <div className="absolute inset-2 border border-[#c9a44c]/50 pointer-events-none rounded-sm" />
-                    <span className="text-[10px] tracking-[0.5em] uppercase text-[#e8d5a8] mb-3">
-                      with love
-                    </span>
-                    <span className="font-script gold-text text-3xl leading-tight">
-                      for more details
-                    </span>
-                    <span className="font-script gold-text text-3xl leading-tight">
-                      please click here
-                    </span>
-                    <span className="mt-4 text-[10px] tracking-[0.4em] uppercase text-[#f5d98a]/80">
-                      open wedding website
-                    </span>
-                  </motion.a>
-                </div>
-              </FadeSection>
-            </div>
-          </motion.div>
-        )}
       </AnimatePresence>
 
       <MusicButton />
@@ -1014,11 +1155,7 @@ function MobileOnlyGate({ children }: { children: React.ReactNode }) {
   );
 }
 
-export const Route = createFileRoute("/")({
-  component: Index,
-});
-
-function Index() {
+export default function App() {
   return (
     <MobileOnlyGate>
       <Experience />
