@@ -541,7 +541,7 @@ function Experience() {
   const [rightRevealed, setRightRevealed] = useState(false);
   const bothRevealed = leftRevealed && rightRevealed;
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll({ container: scrollRef });
+  
 
   // auto-advance from scratch when both done
   useEffect(() => {
@@ -676,13 +676,6 @@ function Experience() {
                 index={i}
                 total={storyImages.length + 1}
               >
-                <ParallaxImage
-                  src={floralCorner}
-                  scrollY={scrollY}
-                  range={[i * 800, (i + 1) * 800]}
-                  yRange={[20, -20]}
-                  style={{ display: "none" }}
-                />
                 <StoryLayout image={img} variant={(i % 7) + 1} />
               </FadeSection>
             ))}
