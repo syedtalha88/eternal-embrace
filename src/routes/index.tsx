@@ -747,7 +747,7 @@ function MobileOnlyGate({ children }: { children: React.ReactNode }) {
   );
 }
 
-export const Route = (await import("@tanstack/react-router")).createFileRoute("/")({
+export const Route = createFileRoute("/")({
   component: Index,
 });
 
