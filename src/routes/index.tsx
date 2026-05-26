@@ -314,22 +314,6 @@ function FadeSection({
   );
 }
 
-/* ---------- Decorative image with parallax ---------- */
-function ParallaxImage({
-  scrollY,
-  range = [0, 1],
-  yRange = [0, -40],
-  ...img
-}: {
-  scrollY: MotionValue<number>;
-  range?: [number, number];
-  yRange?: [number, number];
-} & React.ImgHTMLAttributes<HTMLImageElement>) {
-  const y = useTransform(scrollY, range, yRange);
-  return (
-    <motion.img style={{ y }} loading="lazy" {...img} alt={img.alt ?? ""} />
-  );
-}
 
 /* ---------- Story section variants ---------- */
 function StoryLayout({
