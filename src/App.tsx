@@ -905,11 +905,14 @@ const STORY_IMAGES = [
 
 function StoryStage() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  const { scrollYProgress } = useScroll({
-    container: mounted ? scrollRef : undefined,
-  });
+  const scrollYProgress = useMotionValue(0);
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const max = el.scrollHeight - el.clientHeight;
+    scrollYProgress.set(max > 0 ? el.scrollTop / max : 0);
+  };
+  useEffect(() => { handleScroll(); }, []);
   const totalStorySections = STORY_IMAGES.length + 1;
 
   return (
