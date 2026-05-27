@@ -574,7 +574,7 @@ function StoryLayout({
         alt=""
         loading="lazy"
         className="w-full h-full object-cover block"
-        style={{ aspectRatio: ratio ? undefined : "1 / 1.1" }}
+        style={{ aspectRatio: ratio ? undefined : "1 / 1.4" }}
       />
       <div className={`absolute inset-1.5 border border-[#c9a44c]/60 pointer-events-none ${rounded}`} />
       {children}
