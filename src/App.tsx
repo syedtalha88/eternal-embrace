@@ -769,7 +769,7 @@ function StoryLayout({
 
 /* ---------- Music button ---------- */
 const MUSIC_SRC =
-  "https://cdn.pixabay.com/download/audio/2022/03/15/audio_1bffc8e4f2.mp3?filename=romantic-piano-100029.mp3";
+  "https://res.cloudinary.com/dzgqaidej/video/upload/v1779900301/Jashn-E-BahaaraaInstrumental-Flute-A.R.Rahman_obyuwn.mp3";
 
 function MusicButton() {
   const [on, setOn] = useState(false);
