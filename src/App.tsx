@@ -907,7 +907,7 @@ function StoryStage() {
       >
         {STORY_IMAGES.map((img, i) => (
           <FadeSection key={i} containerRef={scrollRef} index={i}>
-            <StoryLayout image={img} variant={i === 7 ? 5 : (i % 12) + 1} />
+            <StoryLayout image={img} variant={i === 7 ? 5 : i === 2 ? 5 : i === 6 ? 3 : i === 1 ? 6: (i % 12) + 1} />
           </FadeSection>
         ))}
 
