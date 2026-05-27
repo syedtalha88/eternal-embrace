@@ -4,6 +4,7 @@ import {
   AnimatePresence,
   useScroll,
   useTransform,
+  useMotionValue,
   type MotionValue,
 } from "framer-motion";
 
@@ -216,13 +217,13 @@ function ScratchCard({
     }
 
     ctx.fillStyle = variant === "burgundy" ? "#f5d98a" : "#6b1a2a";
-    ctx.font = '600 38px "Cormorant Garamond", serif';
+    ctx.font = '600 42px "Cormorant Garamond", serif';
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(prefix, width / 2, height / 2);
+    ctx.fillText(prefix, width / 2, height / 2 - 8);
 
-    ctx.font = '300 11px "Cormorant Garamond", serif';
-    ctx.fillText("scratch to reveal", width / 2, height / 2 + 32);
+    ctx.font = '600 18px "Great Vibes", cursive';
+    ctx.fillText("scratch to reveal", width / 2, height / 2 + 38);
   }, [prefix, variant]);
 
   const checkProgress = () => {
@@ -904,11 +905,14 @@ const STORY_IMAGES = [
 
 function StoryStage() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  const { scrollYProgress } = useScroll({
-    container: mounted ? scrollRef : undefined,
-  });
+  const scrollYProgress = useMotionValue(0);
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const max = el.scrollHeight - el.clientHeight;
+    scrollYProgress.set(max > 0 ? el.scrollTop / max : 0);
+  };
+  useEffect(() => { handleScroll(); }, []);
   const totalStorySections = STORY_IMAGES.length + 1;
 
   return (
@@ -948,6 +952,7 @@ function StoryStage() {
 
       <div
         ref={scrollRef}
+        onScroll={handleScroll}
         className="absolute inset-0 overflow-y-auto no-scrollbar snap-y snap-mandatory"
         style={{ scrollBehavior: "smooth" }}
       >
@@ -1120,7 +1125,7 @@ function Experience() {
               initial={{ opacity: 0 }}
               animate={{ opacity: bothRevealed ? 0 : 1 }}
               transition={{ duration: 0.8 }}
-              className="mt-12 font-script text-[#f5d98a] text-xl"
+              className="mt-12 font-script gold-text text-4xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
             >
               scratch to reveal
             </motion.p>
