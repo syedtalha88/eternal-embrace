@@ -65,8 +65,6 @@ function Sway({ src, className = "", style, rotate = 0, flip, delay = 0, amount 
         y: { duration: 1, delay },
         rotate: { duration: 6, repeat: Infinity, ease: "easeInOut", delay },
       }}
-      // @ts-expect-error - extra inline transform allowed
-      data-flip={flip}
     />
   );
 }
