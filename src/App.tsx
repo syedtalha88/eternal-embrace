@@ -217,13 +217,13 @@ function ScratchCard({
     }
 
     ctx.fillStyle = variant === "burgundy" ? "#f5d98a" : "#6b1a2a";
-    ctx.font = '600 38px "Cormorant Garamond", serif';
+    ctx.font = '600 42px "Cormorant Garamond", serif';
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(prefix, width / 2, height / 2);
+    ctx.fillText(prefix, width / 2, height / 2 - 8);
 
-    ctx.font = '300 11px "Cormorant Garamond", serif';
-    ctx.fillText("scratch to reveal", width / 2, height / 2 + 32);
+    ctx.font = '600 18px "Great Vibes", cursive';
+    ctx.fillText("scratch to reveal", width / 2, height / 2 + 38);
   }, [prefix, variant]);
 
   const checkProgress = () => {
