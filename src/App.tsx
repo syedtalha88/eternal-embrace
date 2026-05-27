@@ -537,382 +537,229 @@ function StoryLayout({
   image: string;
   variant: number;
 }) {
+  // Reusable main image frame — large, centered
+  const MainFrame = ({
+    children,
+    width = "92%",
+    maxWidth = 380,
+    rounded = "rounded-sm",
+    ratio,
+    extraStyle,
+  }: {
+    children?: React.ReactNode;
+    width?: string;
+    maxWidth?: number;
+    rounded?: string;
+    ratio?: string;
+    extraStyle?: React.CSSProperties;
+  }) => (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.94, y: 20 }}
+      whileInView={{ opacity: 1, scale: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 1, ease: "easeOut" }}
+      className={`relative gold-frame ${rounded} overflow-hidden`}
+      style={{
+        width,
+        maxWidth,
+        aspectRatio: ratio,
+        boxShadow:
+          "0 30px 60px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,164,76,0.5), inset 0 0 22px rgba(201,164,76,0.18)",
+        ...extraStyle,
+      }}
+    >
+      <img
+        src={image}
+        alt=""
+        loading="lazy"
+        className="w-full h-full object-cover block"
+        style={{ aspectRatio: ratio ? undefined : "1 / 1.1" }}
+      />
+      <div className={`absolute inset-1.5 border border-[#c9a44c]/60 pointer-events-none ${rounded}`} />
+      {children}
+    </motion.div>
+  );
+
   const layouts: Record<number, React.ReactNode> = {
-    /* 1. Hanging strand garland + tassels + bouquet */
+    /* 1. Pearl strings + tassels + bouquet */
     1: (
-      <div className="relative w-full h-full flex items-center justify-center px-6">
-        <img
-          src={ornStrand}
-          alt=""
-          loading="lazy"
-          className="absolute -top-6 left-1/2 -translate-x-1/2 w-[70%] max-w-[280px] opacity-95 pointer-events-none"
-        />
-        <img
-          src={ornTassel}
-          alt=""
-          loading="lazy"
-          className="absolute top-2 left-2 w-10 opacity-90 pointer-events-none"
-        />
-        <img
-          src={ornTassel}
-          alt=""
-          loading="lazy"
-          className="absolute top-2 right-2 w-10 opacity-90 pointer-events-none scale-x-[-1]"
-        />
-        <div className="relative w-[78%] max-w-[340px] mt-16 gold-frame rounded-sm overflow-hidden">
-          <img src={image} alt="" loading="lazy" className="w-full h-auto block" />
-          <div className="absolute inset-1 border border-[#c9a44c]/50 pointer-events-none" />
-        </div>
-        <img
-          src={ornBouquet}
-          alt=""
-          loading="lazy"
-          className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-44 opacity-95 pointer-events-none drop-shadow-[0_10px_14px_rgba(0,0,0,0.45)]"
-        />
+      <div className="relative w-full h-full flex items-center justify-center px-4">
+        <Sway src={ornPearl} className="absolute -top-2 left-4 w-20 opacity-95" rotate={-6} amount={3} />
+        <Sway src={ornPearl} className="absolute -top-2 right-4 w-20 opacity-95" rotate={6} amount={3} delay={0.3} style={{ transform: "scaleX(-1)" }} />
+        <Sway src={ornStrand} className="absolute -top-4 left-1/2 -translate-x-1/2 w-[80%] max-w-[320px] opacity-95" amount={2} />
+        <MainFrame width="94%" maxWidth={380}>
+          <Shimmer src={ornCrest} className="absolute -top-6 left-1/2 -translate-x-1/2 w-20 z-10" delay={0.4} />
+        </MainFrame>
+        <Float src={ornBouquet} className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-52 drop-shadow-[0_12px_18px_rgba(0,0,0,0.5)]" delay={0.2} />
       </div>
     ),
-    /* 2. Ribbon drape + wax seal + corner */
+    /* 2. Ribbon drape + wax seal + feathers */
     2: (
-      <div className="relative w-full h-full flex items-center justify-center px-6">
-        <div className="relative w-[80%] max-w-[340px] paper p-3 gold-frame rounded-sm">
-          <img src={image} alt="" loading="lazy" className="w-full h-auto block rounded-sm" />
+      <div className="relative w-full h-full flex items-center justify-center px-4">
+        <Sway src={ornRibbon} className="absolute -top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-[380px] drop-shadow-[0_10px_14px_rgba(0,0,0,0.45)]" amount={2} />
+        <Drift src={ornFeather} className="absolute top-12 -left-4 w-20 opacity-85" delay={0.2} range={12} />
+        <Drift src={ornFeather} className="absolute top-24 -right-4 w-16 opacity-80" delay={0.5} range={-12} style={{ transform: "scaleX(-1)" }} />
+        <div className="relative w-[92%] max-w-[380px] paper p-3 gold-frame rounded-sm">
+          <MainFrame width="100%" maxWidth={360} />
         </div>
-        <img
-          src={ornRibbon}
-          alt=""
-          loading="lazy"
-          className="absolute -top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[360px] pointer-events-none drop-shadow-[0_10px_14px_rgba(0,0,0,0.45)]"
-        />
-        <img
-          src={waxSeal}
-          alt=""
-          loading="lazy"
-          className="absolute bottom-12 right-4 w-16 pointer-events-none drop-shadow-[0_8px_12px_rgba(0,0,0,0.5)]"
-        />
-        <img
-          src={floralCorner}
-          alt=""
-          loading="lazy"
-          className="absolute -bottom-4 -left-4 w-32 opacity-90 pointer-events-none"
-        />
+        <Float src={waxSeal} className="absolute bottom-10 right-4 w-20 drop-shadow-[0_8px_12px_rgba(0,0,0,0.55)]" rotate={-12} delay={0.3} />
+        <Float src={floralCorner} className="absolute -bottom-4 -left-4 w-32 opacity-90" delay={0.1} />
       </div>
     ),
-    /* 3. Luxury wreath + strands */
+    /* 3. Wreath circle + pearls + monogram */
     3: (
       <div className="relative w-full h-full flex items-center justify-center">
-        <img
-          src={ornStrand}
-          alt=""
-          loading="lazy"
-          className="absolute top-0 left-0 w-32 opacity-85 pointer-events-none"
-        />
-        <img
-          src={ornStrand}
-          alt=""
-          loading="lazy"
-          className="absolute top-0 right-0 w-32 opacity-85 pointer-events-none scale-x-[-1]"
-        />
-        <img
-          src={floralWreath}
-          alt=""
-          loading="lazy"
-          className="absolute w-[92%] max-w-[420px] opacity-95 pointer-events-none drop-shadow-[0_12px_28px_rgba(0,0,0,0.45)]"
-        />
-        <div
+        <Sway src={ornPearl} className="absolute top-0 left-0 w-20 opacity-90" rotate={-8} amount={3} />
+        <Sway src={ornPearl} className="absolute top-0 right-0 w-20 opacity-90" rotate={8} amount={3} delay={0.3} style={{ transform: "scaleX(-1)" }} />
+        <Shimmer src={floralWreath} className="absolute w-[98%] max-w-[440px] drop-shadow-[0_12px_28px_rgba(0,0,0,0.5)]" />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.85 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 1.1, ease: "easeOut" }}
           className="relative gold-frame rounded-full overflow-hidden"
-          style={{ width: "48%", maxWidth: 210, aspectRatio: "1" }}
+          style={{ width: "62%", maxWidth: 260, aspectRatio: "1", boxShadow: "0 20px 40px -10px rgba(0,0,0,0.6)" }}
         >
           <img src={image} alt="" loading="lazy" className="w-full h-full object-cover" />
-        </div>
-        <img
-          src={ornMonogram}
-          alt=""
-          loading="lazy"
-          className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-20 pointer-events-none drop-shadow-[0_10px_14px_rgba(0,0,0,0.45)]"
-        />
+        </motion.div>
+        <Shimmer src={ornCrest} className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 drop-shadow-[0_10px_14px_rgba(0,0,0,0.5)]" delay={0.4} />
       </div>
     ),
-    /* 4. Floral corners + ribbon */
+    /* 4. Pressed floral + laser-cut border + tassels */
     4: (
-      <div className="relative w-full h-full flex items-end justify-center pb-16 px-6">
-        <img
-          src={floralCorner}
-          alt=""
-          loading="lazy"
-          className="absolute top-0 left-0 w-56 opacity-95 pointer-events-none -rotate-90"
-        />
-        <img
-          src={ornRibbon}
-          alt=""
-          loading="lazy"
-          className="absolute top-6 left-1/2 -translate-x-1/2 w-[70%] max-w-[280px] opacity-90 pointer-events-none"
-        />
-        <div className="relative w-[78%] max-w-[340px] gold-frame rounded-sm overflow-hidden">
-          <img src={image} alt="" loading="lazy" className="w-full h-auto block" />
-        </div>
-        <img
-          src={floralCorner}
-          alt=""
-          loading="lazy"
-          className="absolute bottom-0 right-0 w-60 opacity-95 pointer-events-none rotate-90"
-        />
+      <div className="relative w-full h-full flex items-center justify-center px-3">
+        <Shimmer src={ornLasercut} className="absolute w-[98%] max-w-[420px] opacity-95" />
+        <Float src={ornPressed} className="absolute -top-2 -left-6 w-32 opacity-90 rotate-[-18deg]" delay={0.1} />
+        <Float src={ornPressed} className="absolute -bottom-4 -right-6 w-36 opacity-90 rotate-[14deg]" delay={0.4} />
+        <MainFrame width="78%" maxWidth={300} />
+        <Sway src={ornTassel} className="absolute -bottom-8 left-10 w-10 opacity-95" rotate={-8} amount={5} />
+        <Sway src={ornTassel} className="absolute -bottom-8 right-10 w-10 opacity-95" rotate={8} amount={5} delay={0.3} style={{ transform: "scaleX(-1)" }} />
       </div>
     ),
-    /* 5. Wax seal + bouquet + tassel */
+    /* 5. Wax seal + bouquet + feather + tassel */
     5: (
-      <div className="relative w-full h-full flex items-center justify-center px-6">
-        <div className="relative w-[78%] max-w-[340px]">
-          <div className="paper-burgundy p-2 gold-frame rounded-sm">
-            <img src={image} alt="" loading="lazy" className="w-full h-auto block rounded-sm" />
+      <div className="relative w-full h-full flex items-center justify-center px-3">
+        <div className="relative w-[94%] max-w-[380px]">
+          <div className="paper-burgundy p-2.5 gold-frame rounded-sm">
+            <MainFrame width="100%" maxWidth={360} />
           </div>
-          <img
-            src={waxSeal}
-            alt=""
-            loading="lazy"
-            className="absolute -bottom-10 -right-6 w-24 drop-shadow-[0_10px_16px_rgba(0,0,0,0.5)] pointer-events-none"
-          />
-          <img
-            src={ornBouquet}
-            alt=""
-            loading="lazy"
-            className="absolute -top-10 -left-14 w-44 opacity-95 pointer-events-none rotate-[-12deg] drop-shadow-[0_8px_14px_rgba(0,0,0,0.4)]"
-          />
-          <img
-            src={ornTassel}
-            alt=""
-            loading="lazy"
-            className="absolute -top-8 right-2 w-10 opacity-90 pointer-events-none"
-          />
+          <Float src={waxSeal} className="absolute -bottom-10 -right-6 w-24 drop-shadow-[0_10px_16px_rgba(0,0,0,0.55)]" rotate={-14} delay={0.3} />
+          <Float src={ornBouquet} className="absolute -top-12 -left-12 w-44 drop-shadow-[0_10px_14px_rgba(0,0,0,0.45)]" rotate={-12} delay={0.1} />
+          <Drift src={ornFeather} className="absolute -top-6 right-2 w-14 opacity-85" delay={0.4} range={14} />
+          <Sway src={ornTassel} className="absolute -bottom-12 left-6 w-10 opacity-95" amount={5} delay={0.2} />
         </div>
       </div>
     ),
-    /* 6. Polaroid tilt + floral corners + tassel */
+    /* 6. Polaroid tilt + pressed corners + pearl */
     6: (
       <div className="relative w-full h-full flex items-center justify-center">
-        <div
-          className="relative paper p-3 pb-12 gold-frame rounded-sm rotate-[-4deg]"
-          style={{ width: "76%", maxWidth: 320 }}
+        <motion.div
+          initial={{ opacity: 0, rotate: -10, y: 20 }}
+          whileInView={{ opacity: 1, rotate: -4, y: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 1.1, ease: "easeOut" }}
+          className="relative paper p-3 pb-14 gold-frame rounded-sm"
+          style={{ width: "90%", maxWidth: 360, boxShadow: "0 24px 48px -12px rgba(0,0,0,0.55)" }}
         >
           <img src={image} alt="" loading="lazy" className="w-full h-auto block" />
-          <div className="absolute bottom-2 left-0 right-0 text-center font-script text-[#6b1a2a] text-2xl">
+          <div className="absolute bottom-2 left-0 right-0 text-center font-script text-[#6b1a2a] text-3xl">
             forever
           </div>
-        </div>
-        <img
-          src={floralCorner}
-          alt=""
-          loading="lazy"
-          className="absolute -top-6 right-2 w-40 opacity-90 pointer-events-none"
-        />
-        <img
-          src={floralHanging}
-          alt=""
-          loading="lazy"
-          className="absolute -bottom-4 left-0 w-36 opacity-85 pointer-events-none"
-        />
-        <img
-          src={ornTassel}
-          alt=""
-          loading="lazy"
-          className="absolute top-4 left-4 w-10 opacity-90 pointer-events-none"
-        />
+        </motion.div>
+        <Float src={ornPressed} className="absolute -top-4 right-0 w-36 opacity-95" rotate={18} delay={0.2} />
+        <Float src={floralHanging} className="absolute -bottom-4 left-0 w-36 opacity-90" delay={0.1} />
+        <Sway src={ornPearl} className="absolute top-2 left-4 w-16 opacity-90" rotate={-10} amount={3} delay={0.3} />
       </div>
     ),
-    /* 7. Arch frame + strands + bouquet */
+    /* 7. Arch frame + strands + bouquet + feathers */
     7: (
-      <div className="relative w-full h-full flex items-center justify-center px-8">
-        <img
-          src={ornStrand}
-          alt=""
-          loading="lazy"
-          className="absolute -top-2 left-0 w-32 opacity-90 pointer-events-none"
+      <div className="relative w-full h-full flex items-center justify-center px-4">
+        <Sway src={ornStrand} className="absolute -top-2 left-0 w-36 opacity-95" rotate={-4} amount={2} />
+        <Sway src={ornStrand} className="absolute -top-2 right-0 w-36 opacity-95" rotate={4} amount={2} delay={0.3} style={{ transform: "scaleX(-1)" }} />
+        <Drift src={ornFeather} className="absolute top-1/3 -left-6 w-16 opacity-80" range={10} delay={0.4} />
+        <MainFrame
+          width="90%"
+          maxWidth={360}
+          ratio="0.72 / 1"
+          extraStyle={{ borderTopLeftRadius: "50% 30%", borderTopRightRadius: "50% 30%" }}
         />
-        <img
-          src={ornStrand}
-          alt=""
-          loading="lazy"
-          className="absolute -top-2 right-0 w-32 opacity-90 pointer-events-none scale-x-[-1]"
-        />
-        <div
-          className="relative gold-frame overflow-hidden"
-          style={{
-            width: "78%",
-            maxWidth: 320,
-            aspectRatio: "0.7 / 1",
-            borderTopLeftRadius: "50% 30%",
-            borderTopRightRadius: "50% 30%",
-          }}
-        >
-          <img src={image} alt="" loading="lazy" className="w-full h-full object-cover" />
-          <div
-            className="absolute inset-2 border border-[#c9a44c]/50 pointer-events-none"
-            style={{
-              borderTopLeftRadius: "50% 30%",
-              borderTopRightRadius: "50% 30%",
-            }}
-          />
-        </div>
-        <img
-          src={ornBouquet}
-          alt=""
-          loading="lazy"
-          className="absolute -bottom-6 right-0 w-40 opacity-95 pointer-events-none drop-shadow-[0_10px_14px_rgba(0,0,0,0.45)]"
-        />
+        <Float src={ornBouquet} className="absolute -bottom-8 right-0 w-44 drop-shadow-[0_10px_14px_rgba(0,0,0,0.5)]" rotate={10} delay={0.2} />
+        <Float src={ornBouquet} className="absolute -bottom-8 left-0 w-40 drop-shadow-[0_10px_14px_rgba(0,0,0,0.5)]" rotate={-10} delay={0.35} style={{ transform: "scaleX(-1)" }} />
       </div>
     ),
-    /* 8. Ornate baroque frame + wax + corners */
+    /* 8. Ornate baroque frame + wax + crest */
     8: (
-      <div className="relative w-full h-full flex items-center justify-center px-4">
-        <img
-          src={floralCorner}
-          alt=""
-          loading="lazy"
-          className="absolute top-0 left-0 w-32 opacity-85 pointer-events-none"
-        />
-        <div className="relative" style={{ width: "85%", maxWidth: 340 }}>
+      <div className="relative w-full h-full flex items-center justify-center px-3">
+        <Float src={floralCorner} className="absolute top-0 left-0 w-32 opacity-85" delay={0.1} />
+        <Float src={floralCorner} className="absolute bottom-0 right-0 w-32 opacity-85 rotate-180" delay={0.3} />
+        <div className="relative" style={{ width: "98%", maxWidth: 400 }}>
           <img
             src={image}
             alt=""
             loading="lazy"
             className="absolute inset-[14%] w-[72%] h-[72%] object-cover"
           />
-          <img
-            src={ornFrame}
-            alt=""
-            loading="lazy"
-            className="relative w-full pointer-events-none drop-shadow-[0_14px_24px_rgba(0,0,0,0.5)]"
-          />
-          <img
-            src={waxSeal}
-            alt=""
-            loading="lazy"
-            className="absolute -bottom-6 -right-4 w-20 pointer-events-none drop-shadow-[0_10px_14px_rgba(0,0,0,0.5)]"
-          />
+          <Shimmer src={ornFrame} className="relative w-full drop-shadow-[0_14px_24px_rgba(0,0,0,0.55)]" />
+          <Float src={waxSeal} className="absolute -bottom-6 -right-4 w-20 drop-shadow-[0_10px_14px_rgba(0,0,0,0.55)]" rotate={-10} delay={0.3} />
+          <Shimmer src={ornCrest} className="absolute -top-8 left-1/2 -translate-x-1/2 w-16" delay={0.5} />
         </div>
       </div>
     ),
-    /* 9. Lace border + ribbon + tassel */
+    /* 9. Laser-cut border + ribbon + tassels + pearls */
     9: (
-      <div className="relative w-full h-full flex items-center justify-center px-6">
-        <img
-          src={ornRibbon}
-          alt=""
-          loading="lazy"
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[85%] max-w-[320px] opacity-90 pointer-events-none"
-        />
-        <div className="relative paper p-6 gold-frame rounded-sm" style={{ width: "82%", maxWidth: 340 }}>
-          <img
-            src={ornLace}
-            alt=""
-            loading="lazy"
-            className="absolute inset-0 w-full h-full opacity-80 pointer-events-none"
-          />
+      <div className="relative w-full h-full flex items-center justify-center px-3">
+        <Sway src={ornRibbon} className="absolute top-0 left-1/2 -translate-x-1/2 w-[95%] max-w-[360px] opacity-95" amount={2} />
+        <Sway src={ornPearl} className="absolute top-8 left-2 w-14 opacity-85" rotate={-10} amount={3} delay={0.2} />
+        <Sway src={ornPearl} className="absolute top-8 right-2 w-14 opacity-85" rotate={10} amount={3} delay={0.5} style={{ transform: "scaleX(-1)" }} />
+        <div className="relative paper p-5 gold-frame rounded-sm" style={{ width: "94%", maxWidth: 380 }}>
+          <Shimmer src={ornLace} className="absolute inset-0 w-full h-full opacity-75" />
           <div className="relative">
-            <img src={image} alt="" loading="lazy" className="w-full h-auto block" />
-            <p className="mt-3 text-center font-script text-[#6b1a2a] text-2xl">
-              save the date
-            </p>
+            <MainFrame width="100%" maxWidth={340} />
+            <p className="mt-3 text-center font-script text-[#6b1a2a] text-3xl">save the date</p>
           </div>
         </div>
-        <img
-          src={ornTassel}
-          alt=""
-          loading="lazy"
-          className="absolute -bottom-2 left-6 w-10 opacity-90 pointer-events-none"
-        />
-        <img
-          src={ornTassel}
-          alt=""
-          loading="lazy"
-          className="absolute -bottom-2 right-6 w-10 opacity-90 pointer-events-none scale-x-[-1]"
-        />
+        <Sway src={ornTassel} className="absolute -bottom-2 left-6 w-10 opacity-95" rotate={-6} amount={5} />
+        <Sway src={ornTassel} className="absolute -bottom-2 right-6 w-10 opacity-95" rotate={6} amount={5} delay={0.3} style={{ transform: "scaleX(-1)" }} />
       </div>
     ),
-    /* 10. Monogram crest + bouquet + strand */
+    /* 10. Embossed monogram + bouquet + strand */
     10: (
-      <div className="relative w-full h-full flex items-center justify-center px-6">
-        <img
-          src={ornStrand}
-          alt=""
-          loading="lazy"
-          className="absolute top-0 left-0 w-32 opacity-85 pointer-events-none"
-        />
-        <div className="relative paper-burgundy p-4 gold-frame rounded-sm" style={{ width: "80%", maxWidth: 340 }}>
-          <img src={image} alt="" loading="lazy" className="w-full h-auto block rounded-sm opacity-90" />
-          <img
-            src={ornMonogram}
-            alt=""
-            loading="lazy"
-            className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-28 pointer-events-none drop-shadow-[0_10px_14px_rgba(0,0,0,0.5)]"
-          />
+      <div className="relative w-full h-full flex items-center justify-center px-3">
+        <Sway src={ornStrand} className="absolute top-0 left-0 w-36 opacity-90" rotate={-4} amount={2} />
+        <Sway src={ornStrand} className="absolute top-0 right-0 w-36 opacity-90" rotate={4} amount={2} delay={0.3} style={{ transform: "scaleX(-1)" }} />
+        <div className="relative paper-burgundy p-3 gold-frame rounded-sm" style={{ width: "94%", maxWidth: 380 }}>
+          <MainFrame width="100%" maxWidth={360} />
+          <Shimmer src={ornCrest} className="absolute -bottom-14 left-1/2 -translate-x-1/2 w-28 drop-shadow-[0_10px_14px_rgba(0,0,0,0.5)]" delay={0.4} />
         </div>
-        <img
-          src={ornBouquet}
-          alt=""
-          loading="lazy"
-          className="absolute top-2 right-0 w-36 opacity-90 pointer-events-none rotate-12"
-        />
+        <Float src={ornBouquet} className="absolute top-2 right-0 w-32 opacity-90" rotate={12} delay={0.2} />
+        <Drift src={ornFeather} className="absolute bottom-4 left-2 w-14 opacity-80" range={12} delay={0.5} />
       </div>
     ),
-    /* 11. Bouquet duo + tassels */
+    /* 11. Pressed flowers duo + tassels + main */
     11: (
-      <div className="relative w-full h-full flex items-center justify-center px-6">
-        <img
-          src={ornTassel}
-          alt=""
-          loading="lazy"
-          className="absolute top-0 left-3 w-12 opacity-90 pointer-events-none"
-        />
-        <img
-          src={ornTassel}
-          alt=""
-          loading="lazy"
-          className="absolute top-0 right-3 w-12 opacity-90 pointer-events-none scale-x-[-1]"
-        />
-        <div className="relative w-[78%] max-w-[330px] gold-frame rounded-sm overflow-hidden">
-          <img src={image} alt="" loading="lazy" className="w-full h-auto block" />
-        </div>
-        <img
-          src={ornBouquet}
-          alt=""
-          loading="lazy"
-          className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-56 pointer-events-none drop-shadow-[0_10px_14px_rgba(0,0,0,0.45)]"
-        />
+      <div className="relative w-full h-full flex items-center justify-center px-3">
+        <Sway src={ornTassel} className="absolute top-0 left-3 w-12 opacity-95" rotate={-8} amount={5} />
+        <Sway src={ornTassel} className="absolute top-0 right-3 w-12 opacity-95" rotate={8} amount={5} delay={0.3} style={{ transform: "scaleX(-1)" }} />
+        <MainFrame width="94%" maxWidth={380} />
+        <Float src={ornPressed} className="absolute -bottom-6 left-0 w-36 opacity-95 drop-shadow-[0_10px_14px_rgba(0,0,0,0.4)]" rotate={-12} delay={0.2} />
+        <Float src={ornPressed} className="absolute -bottom-6 right-0 w-36 opacity-95 drop-shadow-[0_10px_14px_rgba(0,0,0,0.4)]" rotate={12} delay={0.4} />
       </div>
     ),
-    /* 12. Vertical ribbon banner + strands + arch */
+    /* 12. Vertical ribbon banner + strands + arch + crest */
     12: (
-      <div className="relative w-full h-full flex items-center justify-center px-6">
-        <img
-          src={ornStrand}
-          alt=""
-          loading="lazy"
-          className="absolute -top-4 left-0 w-40 opacity-90 pointer-events-none"
-        />
-        <img
-          src={ornStrand}
-          alt=""
-          loading="lazy"
-          className="absolute -top-4 right-0 w-40 opacity-90 pointer-events-none scale-x-[-1]"
-        />
-        <div
-          className="relative gold-frame overflow-hidden"
-          style={{
-            width: "72%",
-            maxWidth: 300,
-            aspectRatio: "0.62 / 1",
-            borderTopLeftRadius: "50% 20%",
-            borderTopRightRadius: "50% 20%",
-          }}
+      <div className="relative w-full h-full flex items-center justify-center px-3">
+        <Sway src={ornStrand} className="absolute -top-4 left-0 w-40 opacity-95" rotate={-4} amount={2} />
+        <Sway src={ornStrand} className="absolute -top-4 right-0 w-40 opacity-95" rotate={4} amount={2} delay={0.3} style={{ transform: "scaleX(-1)" }} />
+        <Drift src={ornFeather} className="absolute top-1/4 -right-4 w-16 opacity-80" range={-12} delay={0.4} />
+        <MainFrame
+          width="88%"
+          maxWidth={340}
+          ratio="0.7 / 1"
+          extraStyle={{ borderTopLeftRadius: "50% 25%", borderTopRightRadius: "50% 25%" }}
         >
-          <img src={image} alt="" loading="lazy" className="w-full h-full object-cover" />
-        </div>
-        <img
-          src={ornRibbon}
-          alt=""
-          loading="lazy"
-          className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-[85%] max-w-[320px] pointer-events-none"
-        />
+          <Shimmer src={ornCrest} className="absolute -top-4 left-1/2 -translate-x-1/2 w-14 z-10" delay={0.5} />
+        </MainFrame>
+        <Sway src={ornRibbon} className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-[92%] max-w-[340px]" amount={2} />
       </div>
     ),
   };
