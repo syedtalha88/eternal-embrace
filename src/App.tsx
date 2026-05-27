@@ -21,6 +21,7 @@ import story4 from "@/assets/story-4.jpeg";
 import story5 from "@/assets/story-5.jpeg";
 import story6 from "@/assets/story-6.jpeg";
 import story7 from "@/assets/story-7.jpeg";
+import story8 from "@/assets/story-8.jpeg";
 import floralCorner from "@/assets/floral-corner.png";
 import floralHanging from "@/assets/floral-hanging.png";
 import floralWreath from "@/assets/floral-wreath.png";
@@ -848,7 +849,7 @@ function BgLayer({
 /* ---------- Main experience ---------- */
 const STORY_IMAGES = [
   story1, story2, story3, story4, story5, story6,
-  story7, story1, story2, story3, story4, story5,
+  story7,story8,  
 ];
 
 function StoryStage() {
@@ -906,7 +907,7 @@ function StoryStage() {
       >
         {STORY_IMAGES.map((img, i) => (
           <FadeSection key={i} containerRef={scrollRef} index={i}>
-            <StoryLayout image={img} variant={(i % 12) + 1} />
+            <StoryLayout image={img} variant={i === 7 ? 5 : (i % 12) + 1} />
           </FadeSection>
         ))}
 
