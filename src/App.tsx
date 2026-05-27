@@ -32,6 +32,110 @@ import ornTassel from "@/assets/orn-tassel.png";
 import ornFrame from "@/assets/orn-frame.png";
 import ornLace from "@/assets/orn-lace.png";
 import ornMonogram from "@/assets/orn-monogram.png";
+import ornPearl from "@/assets/orn-pearl.png";
+import ornFeather from "@/assets/orn-feather.png";
+import ornPressed from "@/assets/orn-pressed.png";
+import ornCrest from "@/assets/orn-crest.png";
+import ornLasercut from "@/assets/orn-lasercut.png";
+
+/* ---------- Animated decoration wrappers ---------- */
+type DecoProps = {
+  src: string;
+  className?: string;
+  style?: React.CSSProperties;
+  rotate?: number;
+  flip?: boolean;
+};
+
+// Gentle pendulum sway (for hanging items: tassels, pearls, strands)
+function Sway({ src, className = "", style, rotate = 0, flip, delay = 0, amount = 4 }: DecoProps & { delay?: number; amount?: number }) {
+  return (
+    <motion.img
+      src={src}
+      alt=""
+      loading="lazy"
+      aria-hidden
+      className={`pointer-events-none select-none ${className}`}
+      style={{ transformOrigin: "top center", ...style }}
+      initial={{ opacity: 0, y: -10, rotate: rotate - amount }}
+      whileInView={{ opacity: 1, y: 0, rotate: [rotate - amount, rotate + amount, rotate - amount] }}
+      viewport={{ once: false, amount: 0.2 }}
+      transition={{
+        opacity: { duration: 1, delay },
+        y: { duration: 1, delay },
+        rotate: { duration: 6, repeat: Infinity, ease: "easeInOut", delay },
+      }}
+      // @ts-expect-error - extra inline transform allowed
+      data-flip={flip}
+    />
+  );
+}
+
+// Soft float in place (for bouquets, pressed flowers, crests)
+function Float({ src, className = "", style, rotate = 0, delay = 0 }: DecoProps & { delay?: number }) {
+  return (
+    <motion.img
+      src={src}
+      alt=""
+      loading="lazy"
+      aria-hidden
+      className={`pointer-events-none select-none ${className}`}
+      style={style}
+      initial={{ opacity: 0, scale: 0.9, rotate }}
+      whileInView={{ opacity: 1, scale: 1, y: [0, -6, 0], rotate }}
+      viewport={{ once: false, amount: 0.2 }}
+      transition={{
+        opacity: { duration: 1, delay },
+        scale: { duration: 1.1, delay },
+        y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay },
+      }}
+    />
+  );
+}
+
+// Subtle shimmer / glow pulse (for monograms, frames)
+function Shimmer({ src, className = "", style, delay = 0 }: DecoProps & { delay?: number }) {
+  return (
+    <motion.img
+      src={src}
+      alt=""
+      loading="lazy"
+      aria-hidden
+      className={`pointer-events-none select-none ${className}`}
+      style={style}
+      initial={{ opacity: 0, scale: 0.96 }}
+      whileInView={{ opacity: [0.75, 1, 0.85], scale: 1, filter: ["brightness(1)", "brightness(1.15)", "brightness(1)"] }}
+      viewport={{ once: false, amount: 0.2 }}
+      transition={{
+        opacity: { duration: 4, repeat: Infinity, ease: "easeInOut", delay },
+        filter: { duration: 4, repeat: Infinity, ease: "easeInOut", delay },
+        scale: { duration: 1, delay },
+      }}
+    />
+  );
+}
+
+// Feather drift (slow rotate + drift)
+function Drift({ src, className = "", style, delay = 0, range = 10 }: DecoProps & { delay?: number; range?: number }) {
+  return (
+    <motion.img
+      src={src}
+      alt=""
+      loading="lazy"
+      aria-hidden
+      className={`pointer-events-none select-none ${className}`}
+      style={style}
+      initial={{ opacity: 0, y: -8, rotate: -range }}
+      whileInView={{ opacity: 1, y: [0, 8, 0], rotate: [-range, range, -range] }}
+      viewport={{ once: false, amount: 0.2 }}
+      transition={{
+        opacity: { duration: 1.2, delay },
+        y: { duration: 7, repeat: Infinity, ease: "easeInOut", delay },
+        rotate: { duration: 7, repeat: Infinity, ease: "easeInOut", delay },
+      }}
+    />
+  );
+}
 
 const SECTION_BGS = [bgHero, bgSec1, bgSec2, bgSec3, bgSec4, bgSec5];
 
