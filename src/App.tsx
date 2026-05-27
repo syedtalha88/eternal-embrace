@@ -44,11 +44,10 @@ type DecoProps = {
   className?: string;
   style?: React.CSSProperties;
   rotate?: number;
-  flip?: boolean;
 };
 
 // Gentle pendulum sway (for hanging items: tassels, pearls, strands)
-function Sway({ src, className = "", style, rotate = 0, flip, delay = 0, amount = 4 }: DecoProps & { delay?: number; amount?: number }) {
+function Sway({ src, className = "", style, rotate = 0, delay = 0, amount = 4 }: DecoProps & { delay?: number; amount?: number }) {
   return (
     <motion.img
       src={src}
