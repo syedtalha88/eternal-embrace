@@ -952,6 +952,7 @@ function StoryStage() {
 
       <div
         ref={scrollRef}
+        onScroll={handleScroll}
         className="absolute inset-0 overflow-y-auto no-scrollbar snap-y snap-mandatory"
         style={{ scrollBehavior: "smooth" }}
       >
