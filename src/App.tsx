@@ -920,7 +920,7 @@ function StoryStage() {
               className="absolute w-[90%] max-w-[420px] opacity-55 pointer-events-none"
             />
             <motion.a
-              href="https://lovable.dev"
+              href="https://weddydev.com"
               target="_blank"
               rel="noreferrer"
               initial={{ scale: 0.9, opacity: 0 }}
