@@ -1121,7 +1121,7 @@ function Experience() {
               initial={{ opacity: 0 }}
               animate={{ opacity: bothRevealed ? 0 : 1 }}
               transition={{ duration: 0.8 }}
-              className="mt-12 font-script text-[#f5d98a] text-xl"
+              className="mt-12 font-script gold-text text-4xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
             >
               scratch to reveal
             </motion.p>
