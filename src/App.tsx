@@ -439,7 +439,7 @@ function StoryStage() {
               src={floralWreath}
               alt=""
               loading="lazy"
-              className="absolute w-[90%] max-w-[420px] opacity-40 pointer-events-none"
+              className="absolute w-[110%] max-w-[520px] opacity-80 pointer-events-none"
             />
             <motion.a
               href="#"
