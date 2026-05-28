@@ -16,7 +16,7 @@ import story3 from "@/assets/story-3.jpeg";
 import story4 from "@/assets/story-4.jpeg";
 import story5 from "@/assets/story-5.jpeg";
 import story6 from "@/assets/story-6.jpeg";
-import story7 from "@/assets/story-7.jpeg";
+import story7 from "@/assets/story-6.jpeg";
 import story8 from "@/assets/story-8.jpeg";
 import floralCorner from "@/assets/floral-corner.png";
 import floralWreath from "@/assets/floral-wreath.png";
@@ -420,7 +420,7 @@ function StoryStage() {
     >
       {/* Soft ivory base background for all story sections */}
       <div className="absolute inset-0 bg-[#f8f1e4]" />
-
+        
       <div
         ref={scrollRef}
         onScroll={handleScroll}
