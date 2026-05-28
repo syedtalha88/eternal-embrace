@@ -104,7 +104,7 @@ function Envelope({ onOpen }: { onOpen: () => void }) {
   const handle = () => {
     if (opening) return;
     setOpening(true);
-    setTimeout(onOpen, 1600);
+    setTimeout(onOpen, 1400);
   };
   return (
     <div className="relative flex items-center justify-center w-full h-full">
