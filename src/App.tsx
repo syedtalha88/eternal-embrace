@@ -104,7 +104,7 @@ function Envelope({ onOpen }: { onOpen: () => void }) {
   const handle = () => {
     if (opening) return;
     setOpening(true);
-    setTimeout(onOpen, 1600);
+    setTimeout(onOpen, 1800);
   };
   return (
     <div className="relative flex items-center justify-center w-full h-full">
@@ -137,7 +137,7 @@ function Envelope({ onOpen }: { onOpen: () => void }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0, scale: 1.05, rotateX: -8 }}
-              transition={{ duration: 0.55 }}
+              transition={{ duration: 0.3 }}
             />
           ) : (
             <motion.img
@@ -147,7 +147,7 @@ function Envelope({ onOpen }: { onOpen: () => void }) {
               className="w-full h-auto block drop-shadow-[0_24px_44px_rgba(0,0,0,0.6)]"
               initial={{ opacity: 0, scale: 0.96, rotateX: 8 }}
               animate={{ opacity: 1, scale: 1, rotateX: 0 }}
-              transition={{ duration: 0.9, ease: [0.7, 0, 0.3, 1] }}
+              transition={{ duration: 0.5, ease: [0.7, 0, 0.3, 1] }}
             />
           )}
         </AnimatePresence>
@@ -225,7 +225,43 @@ function MainImg({
   );
 }
 
-/* ---------- Story layouts — minimal: image + 1-2 small corner decorations ---------- */
+/* ---------- Image frame wrapper: decorations attach to image corners ---------- */
+function ImageFrame({
+  image,
+  children,
+  ratio = "1 / 1.4",
+  rounded = "rounded-sm",
+  circle = false,
+}: {
+  image: string;
+  children?: React.ReactNode;
+  ratio?: string;
+  rounded?: string;
+  circle?: boolean;
+}) {
+  return (
+    <div className="relative w-full h-full flex items-center justify-center px-4">
+      <div
+        className="relative"
+        style={{ width: "92%", maxWidth: 380, aspectRatio: circle ? "1" : ratio }}
+      >
+        <motion.img
+          src={image}
+          alt=""
+          loading="lazy"
+          initial={{ opacity: 0, scale: 0.94, y: 20 }}
+          whileInView={{ opacity: 1, scale: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className={`block w-full h-full object-cover ${circle ? "rounded-full" : rounded}`}
+        />
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Story layouts — image + 1-2 small corner decorations ON the image frame ---------- */
 function StoryLayout({
   image,
   variant,
@@ -235,82 +271,69 @@ function StoryLayout({
 }) {
   const layouts: Record<number, React.ReactNode> = {
     1: (
-      <div className="relative w-full h-full flex items-center justify-center px-4">
-        <MainImg image={image} />
-        <Float src={floralCorner} className="absolute top-6 -left-3 w-20 opacity-80" rotate={-8} />
-      </div>
+      <ImageFrame image={image}>
+        <Float src={floralCorner} className="absolute -top-6 -left-6 w-24 opacity-85" rotate={-12} />
+        <Sway src={ornPearl} className="absolute -top-4 right-2 w-14 opacity-75" rotate={8} amount={3} />
+      </ImageFrame>
     ),
     2: (
-      <div className="relative w-full h-full flex items-center justify-center px-4">
-        <MainImg image={image} />
-        <Sway src={ornPearl} className="absolute top-4 right-3 w-16 opacity-80" rotate={8} amount={3} />
-      </div>
+      <ImageFrame image={image}>
+        <Sway src={ornPearl} className="absolute -top-6 -right-4 w-20 opacity-85" rotate={10} amount={3} />
+        <Float src={ornBouquet} className="absolute -bottom-6 -left-6 w-24 opacity-80" rotate={-10} />
+      </ImageFrame>
     ),
     /* CIRCLE VARIANT — commented out from rotation (kept in code) */
     3: (
-      <div className="relative w-full h-full flex items-center justify-center">
-        <motion.img
-          src={image}
-          alt=""
-          loading="lazy"
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: false, amount: 0.3 }}
-          transition={{ duration: 1.1, ease: "easeOut" }}
-          className="rounded-full object-cover"
-          style={{ width: "70%", maxWidth: 300, aspectRatio: "1" }}
-        />
-        <Float src={floralWreath} className="absolute w-[92%] max-w-[420px] opacity-55 pointer-events-none" />
-      </div>
+      <ImageFrame image={image} circle>
+        <Float src={floralWreath} className="absolute -inset-6 w-[calc(100%+3rem)] opacity-55 pointer-events-none" />
+      </ImageFrame>
     ),
     4: (
-      <div className="relative w-full h-full flex items-center justify-center px-4">
-        <MainImg image={image} />
-        <Sway src={ornTassel} className="absolute -bottom-2 right-8 w-10 opacity-85" rotate={6} amount={5} />
-      </div>
+      <ImageFrame image={image}>
+        <Sway src={ornTassel} className="absolute -bottom-8 right-4 w-12 opacity-90" rotate={6} amount={5} />
+        <Float src={floralCorner} className="absolute -top-5 -right-5 w-20 opacity-80 rotate-90" rotate={6} />
+      </ImageFrame>
     ),
     5: (
-      <div className="relative w-full h-full flex items-center justify-center px-4">
-        <MainImg image={image} />
-        <Float src={ornBouquet} className="absolute -bottom-4 -left-6 w-28 opacity-85" rotate={-12} />
-      </div>
+      <ImageFrame image={image}>
+        <Float src={ornBouquet} className="absolute -bottom-8 -left-8 w-28 opacity-85" rotate={-12} />
+        <Drift src={ornFeather} className="absolute -top-6 right-2 w-16 opacity-75" range={10} />
+      </ImageFrame>
     ),
     6: (
-      <div className="relative w-full h-full flex items-center justify-center px-4">
-        <MainImg image={image} />
-        <Drift src={ornFeather} className="absolute top-6 -right-2 w-16 opacity-75" range={10} />
-      </div>
+      <ImageFrame image={image}>
+        <Drift src={ornFeather} className="absolute -top-6 -right-6 w-20 opacity-80" range={10} />
+        <Sway src={ornPearl} className="absolute -bottom-4 left-2 w-14 opacity-75" rotate={-6} amount={3} />
+      </ImageFrame>
     ),
     7: (
-      <div className="relative w-full h-full flex items-center justify-center px-4">
-        <MainImg image={image} />
-        <Float src={ornPressed} className="absolute -top-2 right-0 w-24 opacity-85" rotate={14} />
-        <Sway src={ornTassel} className="absolute -bottom-2 left-8 w-10 opacity-85" rotate={-6} amount={5} />
-      </div>
+      <ImageFrame image={image}>
+        <Float src={ornPressed} className="absolute -top-6 -right-6 w-24 opacity-85" rotate={14} />
+        <Sway src={ornTassel} className="absolute -bottom-8 left-6 w-12 opacity-90" rotate={-6} amount={5} />
+      </ImageFrame>
     ),
     8: (
-      <div className="relative w-full h-full flex items-center justify-center px-4">
-        <MainImg image={image} />
-        <Float src={floralCorner} className="absolute bottom-2 -right-3 w-20 opacity-80 rotate-180" />
-        <Shimmer />
-      </div>
+      <ImageFrame image={image}>
+        <Float src={floralCorner} className="absolute -bottom-6 -right-6 w-24 opacity-85 rotate-180" />
+        <Float src={ornCrest} className="absolute -top-8 left-1/2 -translate-x-1/2 w-14 opacity-90" />
+      </ImageFrame>
     ),
     9: (
-      <div className="relative w-full h-full flex items-center justify-center px-4">
-        <MainImg image={image} />
-        <Float src={ornCrest} className="absolute -top-2 left-1/2 -translate-x-1/2 w-16 opacity-90" />
-      </div>
+      <ImageFrame image={image}>
+        <Float src={ornCrest} className="absolute -top-8 left-1/2 -translate-x-1/2 w-16 opacity-95" />
+        <Drift src={ornFeather} className="absolute -bottom-4 -left-4 w-16 opacity-75" range={10} />
+      </ImageFrame>
     ),
     10: (
-      <div className="relative w-full h-full flex items-center justify-center px-4">
-        <MainImg image={image} />
-        <Sway src={ornPearl} className="absolute top-4 left-3 w-16 opacity-80" rotate={-8} amount={3} />
-        <Float src={ornBouquet} className="absolute -bottom-4 -right-6 w-28 opacity-85" rotate={12} />
-      </div>
+      <ImageFrame image={image}>
+        <Sway src={ornPearl} className="absolute -top-6 -left-4 w-20 opacity-85" rotate={-10} amount={3} />
+        <Float src={ornBouquet} className="absolute -bottom-8 -right-8 w-28 opacity-85" rotate={12} />
+      </ImageFrame>
     ),
   };
   return <>{layouts[variant] ?? layouts[1]}</>;
 }
+
 
 // no-op placeholder to satisfy import surface
 function Shimmer() {
@@ -416,7 +439,7 @@ function StoryStage() {
               src={floralWreath}
               alt=""
               loading="lazy"
-              className="absolute w-[90%] max-w-[420px] opacity-40 pointer-events-none"
+              className="absolute w-[110%] max-w-[520px] opacity-80 pointer-events-none"
             />
             <motion.a
               href="#"
