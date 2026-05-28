@@ -137,7 +137,7 @@ function Envelope({ onOpen }: { onOpen: () => void }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0, scale: 1.05, rotateX: -8 }}
-              transition={{ duration: 0.55 }}
+              transition={{ duration: 0.3 }}
             />
           ) : (
             <motion.img
@@ -147,7 +147,7 @@ function Envelope({ onOpen }: { onOpen: () => void }) {
               className="w-full h-auto block drop-shadow-[0_24px_44px_rgba(0,0,0,0.6)]"
               initial={{ opacity: 0, scale: 0.96, rotateX: 8 }}
               animate={{ opacity: 1, scale: 1, rotateX: 0 }}
-              transition={{ duration: 0.9, ease: [0.7, 0, 0.3, 1] }}
+              transition={{ duration: 0.5, ease: [0.7, 0, 0.3, 1] }}
             />
           )}
         </AnimatePresence>
